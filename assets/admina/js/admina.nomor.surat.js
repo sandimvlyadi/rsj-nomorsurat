@@ -447,40 +447,45 @@ function selectBagianSuratByIdJenisSurat(id)
     });
 }
 
-$('#formData').on('change', 'select[name="id_jenis_surat"], select[name="id_bagian_surat"], input[name="tanggal"], select[name="id_ujung_surat"]', function(){
-    var name = $(this).attr('name');
-    if (name == 'id_jenis_surat') {
-        var id = $(this).val();
-        selectBagianSuratByIdJenisSurat(id);
-    }
+$('#formData').on('change', 'select[name="id_jenis_surat"]', function(){
+    var id = $(this).val();
+    selectBagianSuratByIdJenisSurat(id);
+})
 
-    var idJenisSurat = $('select[name="id_jenis_surat"]').val();
-    var idBagianSurat = $('select[name="id_bagian_surat"]').val();
-    var tanggal = $('input[name="tanggal"]').val();
-    var ujung = $('select[name="id_ujung_surat"] option:selected').text();
-    var idUjung = $('select[name="id_ujung_surat"] option:selected').val();
-    if (idJenisSurat != 0 && idBagianSurat != 0 && tanggal != '') {
-        $.ajax({
-            type: 'POST',
-            url: baseurl + 'nomor-surat/generate/',
-            data: {
-                'id': $(this).attr('id'),
-                'id_jenis_surat': idJenisSurat,
-                'id_bagian_surat': idBagianSurat,
-                'tanggal': tanggal,
-                'csrf_token': $('input[id="csrf"]').val()
-            },
-            dataType: 'json',
-            success: function(response){
-                if(response.result){
-                    var nomor = response.nomor;
-                    if (idUjung != 0) {
-                        nomor += ujung;
-                    }
-                    $('input[name="nomor"]').val(nomor);
-                    csrf();
-                }
-            }
-        });
-    }
-});
+// $('#formData').on('change', 'select[name="id_jenis_surat"], select[name="id_bagian_surat"], input[name="tanggal"], select[name="id_ujung_surat"]', function(){
+//     var name = $(this).attr('name');
+//     if (name == 'id_jenis_surat') {
+//         var id = $(this).val();
+//         selectBagianSuratByIdJenisSurat(id);
+//     }
+
+//     var idJenisSurat = $('select[name="id_jenis_surat"]').val();
+//     var idBagianSurat = $('select[name="id_bagian_surat"]').val();
+//     var tanggal = $('input[name="tanggal"]').val();
+//     var ujung = $('select[name="id_ujung_surat"] option:selected').text();
+//     var idUjung = $('select[name="id_ujung_surat"] option:selected').val();
+//     if (idJenisSurat != 0 && idBagianSurat != 0 && tanggal != '') {
+//         $.ajax({
+//             type: 'POST',
+//             url: baseurl + 'nomor-surat/generate/',
+//             data: {
+//                 'id': $(this).attr('id'),
+//                 'id_jenis_surat': idJenisSurat,
+//                 'id_bagian_surat': idBagianSurat,
+//                 'tanggal': tanggal,
+//                 'csrf_token': $('input[id="csrf"]').val()
+//             },
+//             dataType: 'json',
+//             success: function(response){
+//                 if(response.result){
+//                     var nomor = response.nomor;
+//                     if (idUjung != 0) {
+//                         nomor += ujung;
+//                     }
+//                     $('input[name="nomor"]').val(nomor);
+//                     csrf();
+//                 }
+//             }
+//         });
+//     }
+// });

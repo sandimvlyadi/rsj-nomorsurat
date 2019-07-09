@@ -92,7 +92,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="form-group" style="display: none;">
                   <label>Nomor Surat</label>
-                  <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly required></input>
+                  <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly></input>
                 </div>
                 <div class="form-group">
                   <label>Tujuan</label>
