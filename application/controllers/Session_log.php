@@ -23,6 +23,11 @@ class Session_log extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+
+		$role = $this->login->role($this->userData, 'session_log');
+		if(!$role['result']){
+			redirect('dashboard/');
+		}
 	}
 
 	public function index()

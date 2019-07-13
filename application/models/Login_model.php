@@ -30,6 +30,41 @@ class Login_model extends CI_Model {
     return $result;
   }
 
+  function role($data = array(), $role = '')
+  {
+    $result = array(
+      'result'   => false,
+      'msg'      => ''
+    );
+
+    $s = $data['session'];
+    $q =  "SELECT
+            *
+          FROM
+            `role` a
+          LEFT JOIN
+            `level_pengguna` b 
+              ON
+            a.`id_level_pengguna` = b.`id`
+          LEFT JOIN
+            `pengguna` c
+              ON
+            b.`id` = c.`id_level_pengguna`
+          WHERE
+            a.`nama` = '". $role ."'
+              AND
+            c.`id` = '". $s['id'] ."'
+              AND
+            a.`deleted_at` IS NULL
+          ;";
+    $r = $this->db->query($q, false)->result_array();
+    if(count($r) > 0){
+      $result['result'] = true;
+    }
+
+    return $result;
+  }
+
   function post($data = array())
   {
     $result = array(

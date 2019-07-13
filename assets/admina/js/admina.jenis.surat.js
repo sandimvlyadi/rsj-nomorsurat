@@ -1,5 +1,7 @@
 var table = '';
 
+$('.li-master').addClass('menu-open');
+$('.li-master .treeview-menu').css('display', 'block');
 $('.li-jenis-surat').addClass('active');
 
 function csrf()
@@ -36,8 +38,7 @@ $(document).ready(function(){
 	            		row.push({
 	            			'no'            : i,
                             'nama'          : response.data[x].nama,
-                            'keterangan'    : response.data[x].keterangan,
-	            			'aksi'	        : button
+                            'keterangan'    : response.data[x].keterangan
 	            		});
 	            		i = i + 1;
 	            	}
@@ -54,8 +55,7 @@ $(document).ready(function(){
         'columns' : [
         	{ 'data' : 'no' },
             { 'data' : 'nama' },
-            { 'data' : 'keterangan' },
-        	{ 'data' : 'aksi' }
+            { 'data' : 'keterangan' }
         ],
 
         'order' 	: [[ 1, 'ASC' ]],
@@ -63,7 +63,7 @@ $(document).ready(function(){
 		'columnDefs': [
     		{
     			'orderable'	: false,
-    			'targets'	: [ 0, 3 ]
+    			'targets'	: [ 0 ]
     		}
   		]
 	});

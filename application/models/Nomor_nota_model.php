@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Nomor_surat_model extends CI_Model {
+class Nomor_nota_model extends CI_Model {
 
 	function _get($data = array())
     {
@@ -9,9 +9,9 @@ class Nomor_surat_model extends CI_Model {
 
         if ($data['search']['value'] && !isset($data['all'])) {
         	$s = $this->db->escape_str($data['search']['value']);
-            $q .= "WHERE (b.`nama_jenis_surat` LIKE '%". $s ."%' OR c.`nama_bagian_surat` LIKE '%". $s ."%' OR d.`display_name` LIKE '%". $s ."%' OR a.`nomor` LIKE '%". $s ."%' OR a.`tujuan` LIKE '%". $s ."%' OR a.`perihal` LIKE '%". $s ."%' OR a.`tanggal` LIKE '%". $s ."%') AND a.`deleted_at` IS NULL ";
+            $q .= "WHERE (b.`nama_jenis_surat` LIKE '%". $s ."%' OR c.`nama_bagian_surat` LIKE '%". $s ."%' OR d.`display_name` LIKE '%". $s ."%' OR a.`nomor` LIKE '%". $s ."%' OR a.`tujuan` LIKE '%". $s ."%' OR a.`perihal` LIKE '%". $s ."%' OR a.`tanggal` LIKE '%". $s ."%') AND a.`deleted_at` IS NULL AND a.`id_jenis_surat` = 3 ";
         } else{
-        	$q .= "WHERE a.`deleted_at` IS NULL ";
+        	$q .= "WHERE a.`deleted_at` IS NULL AND a.`id_jenis_surat` = 3 ";
         }
 
         if (strlen($data['filter_dari']) > 0) {
@@ -187,7 +187,7 @@ class Nomor_surat_model extends CI_Model {
                     VALUES
                         (
                             NOW(),
-                            '". $this->db->escape_str($f['id_jenis_surat']) ."',
+                            '3',
                             '". $this->db->escape_str($f['id_bagian_surat']) ."',
                             '". $this->db->escape_str($f['id_ujung_surat']) ."',
                             '". $this->db->escape_str($f['nomor']) ."',
@@ -202,7 +202,6 @@ class Nomor_surat_model extends CI_Model {
                         `nomor_surat`
                     SET
                         `modified_at` = NOW(),
-                        `id_jenis_surat` = '". $this->db->escape_str($f['id_jenis_surat']) ."',
                         `id_bagian_surat` = '". $this->db->escape_str($f['id_bagian_surat']) ."',
                         `id_ujung_surat` = '". $this->db->escape_str($f['id_ujung_surat']) ."',
                         `nomor` = '". $this->db->escape_str($f['nomor']) ."',
@@ -287,7 +286,7 @@ class Nomor_surat_model extends CI_Model {
                 FROM 
                     `nomor_surat` 
                 WHERE 
-                    `id_jenis_surat` = '". $this->db->escape_str($d['id_jenis_surat']) ."' 
+                    `id_jenis_surat` = '3' 
                         AND 
                     `id_bagian_surat` = '". $this->db->escape_str($d['id_bagian_surat']) ."' 
                         AND 
@@ -355,6 +354,27 @@ class Nomor_surat_model extends CI_Model {
             if (!$this->db->simple_query($q)) {
                 $result['result'] = false;
                 $result['msg']    = 'File gagal disimpan.';
+            }
+        }
+
+        return $result;
+    }
+
+    function select_bagian()
+    {
+        $result = array(
+            'result'    => false,
+            'msg'       => ''
+        );
+
+        $q = "SELECT * FROM `bagian_surat` WHERE `id_jenis_surat` = '3' AND `deleted_at` IS NULL;";
+        $r = $this->db->query($q)->result_array();
+        if (count($r) > 0) {
+            $result['result'] = true;
+            $result['data'] = $r;
+
+            if (count($r) == 1 && $id != 0) {
+                $result['data'] = $r[0];
             }
         }
 

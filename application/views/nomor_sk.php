@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admina | Client</title>
+  <title>Admina | Nomor Surat Keputusan</title>
   <?php $this->load->view('script-head'); ?>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>Client</h1>
+      <h1>Nomor Surat Keputusan</h1>
     </section>
 
     <!-- Main content -->
@@ -34,8 +34,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="col-xs-12">
           <div class="box box-primary">
             <div class="box-body">
-              <div class="row" style="padding-bottom: 10px;">
-                <div class="col-xs-12">
+              <div class="row">
+                <div class="col-xs-3">
+                  <div class="form-group">
+                    <div class="input-group date">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input name="filter_dari" type="text" class="form-control pull-right" placeholder="Dari" readonly style="background-color: #fff;">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <div class="form-group">
+                    <div class="input-group date">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input name="filter_sampai" type="text" class="form-control pull-right" placeholder="Sampai" readonly style="background-color: #fff;">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-1">
+                  <button name="btn_reset" class="btn btn-default btn-flat" title="Reset Filter"><i class="fa fa-refresh"></i></button>
+                </div>
+                <div class="col-xs-5">
                   <button name="btn_add" class="btn btn-xs btn-primary btn-flat pull-right"><i class="fa fa-plus"></i> Tambah Data</button>
                 </div>
               </div>
@@ -45,11 +68,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <thead>
                     <tr>
                       <th>No.</th>
-                      <th>Kode Client</th>
-                      <th>Nama</th>
-                      <th>Kontak</th>
-                      <th>Merk / Serie</th>
-                      <th>Status</th>
+                      <th>Tanggal</th>
+                      <th>Nomor Surat</th>
+                      <th>Tujuan</th>
+                      <th>Perihal</th>
+                      <th>Bagian</th>
+                      <th>Pengguna</th>
+                      <th>File</th>
                       <th style="min-width: 75px;">Aksi</th>
                     </tr>
                     </thead>
@@ -72,33 +97,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="box-body">
               <form id="formData">
                 <input id="csrf" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="" />
+                <input id="0" type="file" name="upload_file" style="display: none;">
                 <div class="form-group">
-                  <label>Kode Client</label>
-                  <input type="text" name="kode_client" class="form-control" placeholder="Kode Client" required readonly></input>
+                  <label>Bagian Surat</label>
+                  <select name="id_bagian_surat" class="form-control" style="width: 100%;"></select>
                 </div>
                 <div class="form-group">
-                  <label>Nama Client</label>
-                  <input type="text" name="nama_client" class="form-control" placeholder="Nama Client" required></input>
+                  <label>Tanggal Surat</label>
+                  <input type="text" name="tanggal" class="form-control" placeholder="Tanggal Surat" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;"></input>
                 </div>
                 <div class="form-group">
-                  <label>Merk / Serie</label>
-                  <input type="text" name="merk_serie" class="form-control" placeholder="Merk / Serie" required></input>
+                  <label>Ujung Surat</label>
+                  <select name="id_ujung_surat" class="form-control" style="width: 100%;"></select>
+                </div>
+                <div class="form-group" style="display: none;">
+                  <label>Nomor Surat</label>
+                  <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly></input>
                 </div>
                 <div class="form-group">
-                  <label>Kontak</label>
-                  <input type="text" name="kontak" class="form-control" placeholder="Kontak" required></input>
+                  <label>Tujuan</label>
+                  <input type="text" name="tujuan" class="form-control" placeholder="Tujuan Surat" required></input>
                 </div>
                 <div class="form-group">
-                  <label>Status</label>
-                  <select name="id_status" class="form-control" style="width: 100%;"></select>
+                  <label>Perihal</label>
+                  <input type="text" name="perihal" class="form-control" placeholder="Perihal Surat"></input>
                 </div>
                 <div class="form-group">
-                  <label>Alamat</label>
-                  <textarea name="alamat" class="form-control" placeholder="Alamat"></textarea>
-                </div>
-                <div class="form-group">
-                  <label>Keterangan</label>
-                  <textarea name="keterangan" class="form-control" placeholder="Keterangan"></textarea>
+                  <label>Dibuat Oleh</label>
+                  <input type="text" name="display_name" class="form-control" placeholder="Dibuat Oleh" readonly required></input>
+                  <input type="hidden" name="id_pengguna" class="form-control" placeholder="Dibuat Oleh" required></input>
                 </div>
               </form>
             </div>
@@ -125,6 +152,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- ./wrapper -->
 
 <?php $this->load->view('script-foot'); ?>
-<script src="<?php echo base_url('assets/admina/js/admina.client.js'); ?>"></script>
+<script src="<?php echo base_url('assets/admina/js/admina.nomor.sk.js'); ?>"></script>
 </body>
 </html>

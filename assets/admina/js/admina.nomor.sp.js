@@ -1,10 +1,11 @@
 var table = '';
-var selectJenisSurat = '';
 var selectBagianSurat = '';
 var selectUjungSurat = '';
 var varIdBagianSurat = 0;
 
-$('.li-nomor-surat').addClass('active');
+$('.li-nomor-surat').addClass('menu-open');
+$('.li-nomor-surat .treeview-menu').css('display', 'block');
+$('.li-nomor-sp').addClass('active');
 
 function csrf()
 {
@@ -44,7 +45,7 @@ $(document).ready(function(){
         'serverSide'	: true,
 
         'ajax' : {
-        	'url'	: baseurl + 'nomor-surat/datatable/',
+        	'url'	: baseurl + 'nomor-sp/datatable/',
             'type'	: 'GET',
             'data'  : function(d){
                 d.filter_dari = $('input[name="filter_dari"]').val(),
@@ -110,24 +111,7 @@ $(document).ready(function(){
 
     $.ajax({
         type: 'GET',
-        url: baseurl + 'jenis-surat/select/',
-        dataType: 'json',
-        success: function(response){
-            if(response.result){
-                $('select[name="id_jenis_surat"]').append('<option value="0">- Pilih Jenis Surat -</option>');
-                for(var x in response.data){
-                    $('select[name="id_jenis_surat"]').append('<option value="'+ response.data[x].id +'">'+response.data[x].nama+'</option>');
-                }
-            } else{
-                $('select[name="id_jenis_surat"]').append('<option value="0">- Pilih Jenis Surat -</option>');
-            }
-        }
-    });
-    selectJenisSurat = $('select[name="id_jenis_surat"]').select2();
-
-    $.ajax({
-        type: 'GET',
-        url: baseurl + 'bagian-surat/select/',
+        url: baseurl + 'nomor-sp/select-bagian/',
         dataType: 'json',
         success: function(response){
             if(response.result){
@@ -180,7 +164,6 @@ $('button[name="btn_add"]').click(function(){
     $('input[name="tujuan"]').val('');
     $('input[name="perihal"]').val('');
     $('input[name="tanggal"]').val('');
-    $(selectJenisSurat).val('0').trigger('change');
     $(selectBagianSurat).val('0').trigger('change');
     $(selectUjungSurat).val('0').trigger('change');
     userdata();
@@ -199,13 +182,12 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
 
     $.ajax({
         type: 'GET',
-        url: baseurl + 'nomor-surat/edit/'+ id +'/',
+        url: baseurl + 'nomor-sp/edit/'+ id +'/',
         dataType: 'json',
         success: function(response){
             if(response.result){
                 var d = response.data;
 
-                varIdBagianSurat = d.id_bagian_surat;
                 $('input[name="nomor"]').val(d.nomor);
                 $('input[name="tujuan"]').val(d.tujuan);
                 $('input[name="perihal"]').val(d.perihal);
@@ -218,9 +200,9 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
                     }
                 });
 
-                $(selectJenisSurat).find('option').each(function(){
-                    if ($(this).val() == d.id_jenis_surat) {
-                        $(selectJenisSurat).val($(this).val()).trigger('change');
+                $(selectBagianSurat).find('option').each(function(){
+                    if ($(this).val() == d.id_bagian_surat) {
+                        $(selectBagianSurat).val($(this).val()).trigger('change');
                     }
                 });
 
@@ -259,7 +241,7 @@ $('#dataTable').on('click', 'button[name="btn_delete"]', function(){
 
 	$.ajax({
         type: 'POST',
-        url: baseurl + 'nomor-surat/delete/',
+        url: baseurl + 'nomor-sp/delete/',
         data: {
         	'id': id,
 			'csrf_token': $('input[id="csrf"]').val()
@@ -338,23 +320,6 @@ $('button[name="btn_save"]').click(function(){
         return;
     }
 
-    if ($('select[name="id_jenis_surat"]').val() == 0) {
-        $.notify({
-            icon: 'glyphicon glyphicon-info-sign',
-            message: 'Silakan pilih jenis surat terlebih dahulu.'
-        }, {
-            type: 'warning',
-            delay: 1000,
-            timer: 500,
-            placement: {
-              from: 'top',
-              align: 'center'
-            }
-        });
-        $(this).focus();
-        return;
-    }
-
     if ($('select[name="id_bagian_surat"]').val() == 0) {
         $.notify({
             icon: 'glyphicon glyphicon-info-sign',
@@ -391,7 +356,7 @@ $('button[name="btn_save"]').click(function(){
 
     $.ajax({
         type: 'POST',
-        url: baseurl + 'nomor-surat/save/',
+        url: baseurl + 'nomor-sp/save/',
         data: {
         	'id': $(this).attr('id'),
         	'form': $('#formData').serialize(),
@@ -452,7 +417,7 @@ $('input[name="upload_file"]').on('change', function(){
 
         $.ajax({
             type: 'POST',
-            url: baseurl + 'nomor-surat/upload/',
+            url: baseurl + 'nomor-sp/upload/',
             data: fu,
             dataType: 'json',
             contentType: false,
@@ -495,5 +460,10 @@ $('input[name="upload_file"]').on('change', function(){
 });
 
 $('input[name="filter_dari"], input[name="filter_sampai"]').on('change', function(){
+    table.ajax.reload(null, false);
+});
+
+$('button[name="btn_reset"]').on('click', function(){
+    $('input[name="filter_dari"], input[name="filter_sampai"]').val('');
     table.ajax.reload(null, false);
 });

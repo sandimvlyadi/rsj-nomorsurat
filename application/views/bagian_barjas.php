@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admina | Spare Part</title>
+  <title>Admina | Bagian Barang & Jasa</title>
   <?php $this->load->view('script-head'); ?>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>Spare Part</h1>
+      <h1>Bagian Barang & Jasa</h1>
     </section>
 
     <!-- Main content -->
@@ -45,6 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <thead>
                     <tr>
                       <th>No.</th>
+                      <th>Kode</th>
                       <th>Nama</th>
                       <th>Keterangan</th>
                       <th style="min-width: 75px;">Aksi</th>
@@ -70,8 +71,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <form id="formData">
                 <input id="csrf" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="" />
                 <div class="form-group">
-                  <label>Nama Spare Part</label>
-                  <input type="text" name="nama_spare_part" class="form-control" placeholder="Nama Spare Part" required></input>
+                  <label>Kode</label>
+                  <input type="text" name="kode" class="form-control" placeholder="Kode" required></input>
+                </div>
+                <div class="form-group">
+                  <label>Nama</label>
+                  <input type="text" name="nama" class="form-control" placeholder="Nama" required></input>
                 </div>
                 <div class="form-group">
                   <label>Keterangan</label>
@@ -102,6 +107,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- ./wrapper -->
 
 <?php $this->load->view('script-foot'); ?>
-<script src="<?php echo base_url('assets/admina/js/admina.spare.part.js'); ?>"></script>
+<script src="<?php echo base_url('assets/admina/js/admina.bagian.barjas.js'); ?>"></script>
 </body>
 </html>

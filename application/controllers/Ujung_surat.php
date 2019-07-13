@@ -23,6 +23,11 @@ class Ujung_surat extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+
+		$role = $this->login->role($this->userData, 'ujung_surat');
+		if(!$role['result']){
+			redirect('dashboard/');
+		}
 	}
 
 	public function index()

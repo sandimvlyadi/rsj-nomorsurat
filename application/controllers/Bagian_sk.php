@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bagian_surat extends CI_Controller {
+class Bagian_sk extends CI_Controller {
 
 	private $userData;
 
@@ -9,7 +9,7 @@ class Bagian_surat extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('login_model', 'login');
-		$this->load->model('bagian_surat_model', 'model');
+		$this->load->model('bagian_sk_model', 'model');
 
 		$this->userData = array(
 			'session'	=> $this->session->userdata('userSession'),
@@ -24,7 +24,7 @@ class Bagian_surat extends CI_Controller {
 			redirect('login/');
 		}
 
-		$role = $this->login->role($this->userData, 'bagian_surat');
+		$role = $this->login->role($this->userData, 'bagian_sk');
 		if(!$role['result']){
 			redirect('dashboard/');
 		}
@@ -32,7 +32,7 @@ class Bagian_surat extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('bagian_surat');
+		$this->load->view('bagian_sk');
 	}
 
 	public function edit($id = 0)
@@ -93,18 +93,6 @@ class Bagian_surat extends CI_Controller {
 		);
 
 		$response = $this->model->select($id);
-
-		echo json_encode($response, JSON_PRETTY_PRINT);
-	}
-
-	public function select_by_id_jenis_surat($id = 0)
-	{
-		$response 	= array(
-			'result'	=> false,
-			'msg'		=> ''
-		);
-
-		$response = $this->model->select_by_id_jenis_surat($id);
 
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}

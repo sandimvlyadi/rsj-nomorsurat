@@ -34,11 +34,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="col-xs-12">
           <div class="box box-primary">
             <div class="box-body">
-              <div class="row" style="padding-bottom: 10px;">
-                <div class="col-xs-12">
-                  <button name="btn_add" class="btn btn-xs btn-primary btn-flat pull-right"><i class="fa fa-plus"></i> Tambah Data</button>
-                </div>
-              </div>
               <div class="row">
                 <div class="col-xs-12">
                   <table id="dataTable" class="table table-bordered table-striped">
@@ -47,7 +42,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       <th>No.</th>
                       <th>Nama</th>
                       <th>Keterangan</th>
-                      <th style="min-width: 75px;">Aksi</th>
                     </tr>
                     </thead>
                     <tbody>

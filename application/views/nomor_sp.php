@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admina | Nomor Surat</title>
+  <title>Admina | Nomor Surat Perintah</title>
   <?php $this->load->view('script-head'); ?>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>Nomor Surat</h1>
+      <h1>Nomor Surat Perintah</h1>
     </section>
 
     <!-- Main content -->
@@ -55,7 +55,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-1">
+                  <button name="btn_reset" class="btn btn-default btn-flat" title="Reset Filter"><i class="fa fa-refresh"></i></button>
+                </div>
+                <div class="col-xs-5">
                   <button name="btn_add" class="btn btn-xs btn-primary btn-flat pull-right"><i class="fa fa-plus"></i> Tambah Data</button>
                 </div>
               </div>
@@ -95,10 +98,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <form id="formData">
                 <input id="csrf" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="" />
                 <input id="0" type="file" name="upload_file" style="display: none;">
-                <div class="form-group">
-                  <label>Jenis Surat</label>
-                  <select name="id_jenis_surat" class="form-control" style="width: 100%;"></select>
-                </div>
                 <div class="form-group">
                   <label>Bagian Surat</label>
                   <select name="id_bagian_surat" class="form-control" style="width: 100%;"></select>
@@ -153,6 +152,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- ./wrapper -->
 
 <?php $this->load->view('script-foot'); ?>
-<script src="<?php echo base_url('assets/admina/js/admina.nomor.surat.js'); ?>"></script>
+<script src="<?php echo base_url('assets/admina/js/admina.nomor.sp.js'); ?>"></script>
 </body>
 </html>

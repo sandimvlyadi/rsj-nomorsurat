@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bagian_surat extends CI_Controller {
+class Nomor_sp extends CI_Controller {
 
 	private $userData;
 
@@ -9,7 +9,7 @@ class Bagian_surat extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('login_model', 'login');
-		$this->load->model('bagian_surat_model', 'model');
+		$this->load->model('nomor_sp_model', 'model');
 
 		$this->userData = array(
 			'session'	=> $this->session->userdata('userSession'),
@@ -24,7 +24,7 @@ class Bagian_surat extends CI_Controller {
 			redirect('login/');
 		}
 
-		$role = $this->login->role($this->userData, 'bagian_surat');
+		$role = $this->login->role($this->userData, 'nomor_sp');
 		if(!$role['result']){
 			redirect('dashboard/');
 		}
@@ -32,7 +32,7 @@ class Bagian_surat extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('bagian_surat');
+		$this->load->view('nomor_sp');
 	}
 
 	public function edit($id = 0)
@@ -97,14 +97,47 @@ class Bagian_surat extends CI_Controller {
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}
 
-	public function select_by_id_jenis_surat($id = 0)
+	public function generate()
 	{
 		$response 	= array(
 			'result'	=> false,
 			'msg'		=> ''
 		);
 
-		$response = $this->model->select_by_id_jenis_surat($id);
+		$param = array(
+			'userData' => $this->userData,
+			'postData' => $this->security->xss_clean($_POST)
+		);
+		$response = $this->model->generate($param);
+
+		echo json_encode($response, JSON_PRETTY_PRINT);
+	}
+
+	public function upload()
+	{
+		$response 	= array(
+			'result'	=> false,
+			'msg'		=> ''
+		);
+
+		$param = array(
+			'userData' => $this->userData,
+			'postData' => $this->security->xss_clean($_POST),
+			'fileData' => $_FILES
+		);
+		$response = $this->model->upload($param);
+
+		echo json_encode($response, JSON_PRETTY_PRINT);
+	}
+
+	public function select_bagian()
+	{
+		$response 	= array(
+			'result'	=> false,
+			'msg'		=> ''
+		);
+
+		$response = $this->model->select_bagian();
 
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}

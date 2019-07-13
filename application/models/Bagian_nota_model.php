@@ -1,24 +1,28 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Jenis_surat_model extends CI_Model {
+class Bagian_nota_model extends CI_Model {
 
 	function _get($data = array())
     {
-    	$q = "SELECT a.* FROM `jenis_surat` a ";
+    	$q = "SELECT a.*, b.`nama` AS `nama_jenis_surat` FROM `bagian_surat` a LEFT JOIN `jenis_surat` b ON a.`id_jenis_surat` = b.`id` ";
 
         if ($data['search']['value'] && !isset($data['all'])) {
         	$s = $this->db->escape_str($data['search']['value']);
-            $q .= "WHERE (a.`nama` LIKE '%". $s ."%' OR a.`keterangan` LIKE '%". $s ."%') AND a.`deleted_at` IS NULL ";
+            $q .= "WHERE (b.`nama` LIKE '%". $s ."%' OR a.`kode` LIKE '%". $s ."%' OR a.`nama` LIKE '%". $s ."%' OR a.`keterangan` LIKE '%". $s ."%') AND a.`deleted_at` IS NULL AND a.`id_jenis_surat` = 3 ";
         } else{
-        	$q .= "WHERE a.`deleted_at` IS NULL ";
+        	$q .= "WHERE a.`deleted_at` IS NULL AND a.`id_jenis_surat` = 3 ";
         }
 
         if (isset($data['order'])) {
         	$dir = $this->db->escape_str($data['order'][0]['dir']);
         	$col = $this->db->escape_str($data['columns'][$data['order'][0]['column']]['data']);
         	if ($data['order'][0]['column'] != 0) {
-                $q .= "ORDER BY a.`". $col ."` ". $dir ." ";
+                if ($col == 'nama_jenis_surat') {
+                    $q .= "ORDER BY b.`nama` ". $dir ." ";
+                } else{
+                    $q .= "ORDER BY a.`". $col ."` ". $dir ." ";
+                }
         	} else{
         		$q .= "ORDER BY a.`id` ". $dir ." ";
         	}
@@ -88,13 +92,18 @@ class Jenis_surat_model extends CI_Model {
     {
         $result = array(
             'result'    => false,
-            'msg'       => 'Data jenis surat tidak ditemukan.'
+            'msg'       => 'Data bagian surat tidak ditemukan.'
         );
 
         $q =    "SELECT
-                    a.*
+                    a.*,
+                    b.`nama` AS `nama_jenis_surat`
                 FROM
-                    `jenis_surat` a
+                    `bagian_surat` a
+                LEFT JOIN
+                    `jenis_surat` b
+                        ON
+                    a.`id_jenis_surat` = b.`id`
                 WHERE
                     a.`id` = '". $this->db->escape_str($id) ."'
                 ;";
@@ -122,31 +131,37 @@ class Jenis_surat_model extends CI_Model {
 		$q = '';
 		if ($id == 0) {
 			$q =    "INSERT INTO
-                        `jenis_surat`
+                        `bagian_surat`
                         (
                             `created_at`,
+                            `kode`,
                             `nama`,
-                            `keterangan`
+                            `keterangan`,
+                            `id_jenis_surat`
                         )
                     VALUES
                         (
                             NOW(),
+                            '". $this->db->escape_str($f['kode']) ."',
                             '". $this->db->escape_str($f['nama']) ."',
-                            '". $this->db->escape_str($f['keterangan']) ."'
+                            '". $this->db->escape_str($f['keterangan']) ."',
+                            '3'
                         )
                     ;";
 		} else{
             $q =    "UPDATE
-                        `jenis_surat`
+                        `bagian_surat`
                     SET
                         `modified_at` = NOW(),
+                        `kode` = '". $this->db->escape_str($f['kode']) ."',
                         `nama` = '". $this->db->escape_str($f['nama']) ."',
-                        `keterangan` = '". $this->db->escape_str($f['keterangan']) ."'
+                        `keterangan` = '". $this->db->escape_str($f['keterangan']) ."',
+                        `id_jenis_surat` = '3'
                     WHERE
                         `id` = '". $this->db->escape_str($id) ."'
                     ;";
 		}
-        
+
 		if ($this->db->simple_query($q)) {
 			$result['result'] = true;
 			$result['msg'] = 'Data berhasil disimpan.';
@@ -167,7 +182,7 @@ class Jenis_surat_model extends CI_Model {
 		$u = $data['userData'];
 		$d = $data['postData'];
 		$id = $d['id'];
-		$q = "UPDATE `jenis_surat` SET `deleted_at` = NOW() WHERE `id` = '". $this->db->escape_str($id) ."';";
+		$q = "UPDATE `bagian_surat` SET `deleted_at` = NOW() WHERE `id` = '". $this->db->escape_str($id) ."';";
 		if ($this->db->simple_query($q)) {
 			$result['result'] = true;
 			$result['msg'] = 'Data berhasil dihapus.';
@@ -187,9 +202,9 @@ class Jenis_surat_model extends CI_Model {
 
         $q = "";
         if ($id == 0) {
-            $q = "SELECT * FROM `jenis_surat` WHERE `deleted_at` IS NULL;";
+            $q = "SELECT * FROM `bagian_surat` WHERE `deleted_at` IS NULL;";
         } else{
-            $q = "SELECT * FROM `jenis_surat` WHERE `id` = '". $this->db->escape_str($id) ."' AND `deleted_at` IS NULL;";
+            $q = "SELECT * FROM `bagian_surat` WHERE `id` = '". $this->db->escape_str($id) ."' AND `deleted_at` IS NULL;";
         }
         $r = $this->db->query($q)->result_array();
         if (count($r) > 0) {

@@ -23,6 +23,11 @@ class Registrasi_pengguna extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+
+		$role = $this->login->role($this->userData, 'registrasi_pengguna');
+		if(!$role['result']){
+			redirect('dashboard/');
+		}
 	}
 
 	public function index()

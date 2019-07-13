@@ -23,6 +23,11 @@ class Nomor_surat extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+
+		$role = $this->login->role($this->userData, 'nomor_surat');
+		if(!$role['result']){
+			redirect('dashboard/');
+		}
 	}
 
 	public function index()
@@ -104,6 +109,23 @@ class Nomor_surat extends CI_Controller {
 			'postData' => $this->security->xss_clean($_POST)
 		);
 		$response = $this->model->generate($param);
+
+		echo json_encode($response, JSON_PRETTY_PRINT);
+	}
+
+	public function upload()
+	{
+		$response 	= array(
+			'result'	=> false,
+			'msg'		=> ''
+		);
+
+		$param = array(
+			'userData' => $this->userData,
+			'postData' => $this->security->xss_clean($_POST),
+			'fileData' => $_FILES
+		);
+		$response = $this->model->upload($param);
 
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}

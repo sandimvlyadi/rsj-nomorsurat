@@ -23,6 +23,11 @@ class Jenis_surat extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+
+		$role = $this->login->role($this->userData, 'jenis_surat');
+		if(!$role['result']){
+			redirect('dashboard/');
+		}
 	}
 
 	public function index()

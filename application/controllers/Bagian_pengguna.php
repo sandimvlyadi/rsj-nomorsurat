@@ -23,6 +23,11 @@ class Bagian_pengguna extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+
+		$role = $this->login->role($this->userData, 'bagian_pengguna');
+		if(!$role['result']){
+			redirect('dashboard/');
+		}
 	}
 
 	public function index()

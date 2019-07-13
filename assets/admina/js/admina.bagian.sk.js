@@ -1,9 +1,8 @@
 var table = '';
-var selectLevelPengguna = '';
 
-$('.li-master').addClass('menu-open');
-$('.li-master .treeview-menu').css('display', 'block');
-$('.li-bagian-pengguna').addClass('active');
+$('.li-bagian-surat').addClass('menu-open');
+$('.li-bagian-surat .treeview-menu').css('display', 'block');
+$('.li-bagian-sk').addClass('active');
 
 function csrf()
 {
@@ -27,7 +26,7 @@ $(document).ready(function(){
         'serverSide'	: true,
 
         'ajax' : {
-        	'url'	: baseurl + 'bagian-pengguna/datatable/',
+        	'url'	: baseurl + 'bagian-sk/datatable/',
             'type'	: 'GET',
             'dataSrc' : function(response){
             	var i = response.start;
@@ -37,11 +36,11 @@ $(document).ready(function(){
                         var button = '<button id="'+ response.data[x].id +'" name="btn_edit" class="btn btn-info btn-xs btn-flat" title="Edit Data"><i class="fa fa-edit"></i></button> <button id="'+ response.data[x].id +'" name="btn_delete" class="btn btn-danger btn-xs btn-flat" title="Hapus Data"><i class="fa fa-trash"></i></button>';
 
 	            		row.push({
-	            			'no'                    : i,
-                            'nama_level_pengguna'   : response.data[x].nama_level_pengguna,
-                            'nama'                  : response.data[x].nama,
-                            'keterangan'            : response.data[x].keterangan,
-	            			'aksi'                  : button
+	            			'no'                : i,
+                            'kode'              : response.data[x].kode,
+                            'nama'              : response.data[x].nama,
+                            'keterangan'        : response.data[x].keterangan,
+	            			'aksi'              : button
 	            		});
 	            		i = i + 1;
 	            	}
@@ -57,7 +56,7 @@ $(document).ready(function(){
 
         'columns' : [
         	{ 'data' : 'no' },
-            { 'data' : 'nama_level_pengguna' },
+            { 'data' : 'kode' },
             { 'data' : 'nama' },
             { 'data' : 'keterangan' },
         	{ 'data' : 'aksi' }
@@ -72,31 +71,14 @@ $(document).ready(function(){
     		}
   		]
 	});
-
-    $.ajax({
-        type: 'GET',
-        url: baseurl + 'level-pengguna/select/',
-        dataType: 'json',
-        success: function(response){
-            if(response.result){
-                $('select[name="id_level_pengguna"]').append('<option value="0">- Pilih Level Pengguna -</option>');
-                for(var x in response.data){
-                    $('select[name="id_level_pengguna"]').append('<option value="'+ response.data[x].id +'">'+response.data[x].nama+'</option>');
-                }
-            } else{
-                $('select[name="id_level_pengguna"]').append('<option value="0">- Pilih Level Pengguna -</option>');
-            }
-        }
-    });
-    selectLevelPengguna = $('select[name="id_level_pengguna"]').select2();
 });
 
 $('button[name="btn_add"]').click(function(){
 	csrf();
 	$('button[name="btn_save"]').attr('id', '0');
+    $('input[name="kode"]').val('');
     $('input[name="nama"]').val('');
     $('textarea[name="keterangan"]').val('');
-    $(selectLevelPengguna).val('0').trigger('change');
 
     $('#formTitle').text('Tambah Data');
 
@@ -112,18 +94,13 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
 
     $.ajax({
         type: 'GET',
-        url: baseurl + 'bagian-pengguna/edit/'+ id +'/',
+        url: baseurl + 'bagian-sk/edit/'+ id +'/',
         dataType: 'json',
         success: function(response){
             if(response.result){
                 var d = response.data;
 
-                $(selectLevelPengguna).find('option').each(function(){
-                    if ($(this).val() == d.id_level_pengguna) {
-                        $(selectLevelPengguna).val($(this).val()).trigger('change');
-                    }
-                });
-
+                $('input[name="kode"]').val(d.kode);
                 $('input[name="nama"]').val(d.nama);
                 $('textarea[name="keterangan"]').val(d.keterangan);
 
@@ -162,7 +139,7 @@ $('#dataTable').on('click', 'button[name="btn_delete"]', function(){
 
 	$.ajax({
         type: 'POST',
-        url: baseurl + 'bagian-pengguna/delete/',
+        url: baseurl + 'bagian-sk/delete/',
         data: {
         	'id': id,
 			'csrf_token': $('input[id="csrf"]').val()
@@ -241,26 +218,9 @@ $('button[name="btn_save"]').click(function(){
         return;
     }
 
-    if ($('select[name="id_level_pengguna"]').val() == 0) {
-        $.notify({
-            icon: 'glyphicon glyphicon-info-sign',
-            message: 'Silakan pilih level pengguna terlebih dahulu.'
-        }, {
-            type: 'warning',
-            delay: 1000,
-            timer: 500,
-            placement: {
-              from: 'top',
-              align: 'center'
-            }
-        });
-        $(this).focus();
-        return;
-    }
-
     $.ajax({
         type: 'POST',
-        url: baseurl + 'bagian-pengguna/save/',
+        url: baseurl + 'bagian-sk/save/',
         data: {
         	'id': $(this).attr('id'),
         	'form': $('#formData').serialize(),
