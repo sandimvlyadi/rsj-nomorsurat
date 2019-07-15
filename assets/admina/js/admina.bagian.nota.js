@@ -264,3 +264,59 @@ $('button[name="btn_save"]').click(function(){
         }
     });
 });
+
+$('button[name="btn_import"]').on('click', function(){
+    $('input[name="upload_import"]').trigger('click');
+});
+
+$('input[name="upload_import"]').on('change', function(){
+    if ($(this).val() != '') {
+        var fd = $(this).prop('files')[0];
+        var fu = new FormData();
+        fu.append('file', fd);
+        fu.append('csrf_token', $('input[id="csrf"]').val());
+        fu.append('id', $(this).attr('id'));
+
+        $.ajax({
+            type: 'POST',
+            url: baseurl + 'upload/import-bagian/',
+            data: fu,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function(response){
+                if(response.result){
+                    $.notify({
+                        icon: "glyphicon glyphicon-ok",
+                        message: response.msg
+                    }, {
+                        type: 'success',
+                        delay: 3000,
+                        timer: 1000,
+                        placement: {
+                            from: 'top',
+                            align: 'center'
+                        }
+                    });
+                    
+                    table.ajax.reload(null, false);
+                } else{
+                    $.notify({
+                        icon: "glyphicon glyphicon-info-sign",
+                        message: response.msg
+                    }, {
+                        type: 'danger',
+                        delay: 3000,
+                        timer: 1000,
+                        placement: {
+                            from: 'top',
+                            align: 'center'
+                        }
+                    });
+                }
+
+                csrf();
+            }
+        });
+    }
+});

@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admina | Bagian Surat Perintah</title>
+  <title>Sistem Penomoran Surat | Bagian Surat Perintah</title>
   <?php $this->load->view('script-head'); ?>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -35,7 +35,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <div class="box box-primary">
             <div class="box-body">
               <div class="row" style="padding-bottom: 10px;">
-                <div class="col-xs-12">
+                <div class="col-xs-6">
+                  <button name="btn_import" class="btn btn-xs btn-success btn-flat"><i class="fa fa-cloud-upload"></i> Import</button>
+                  <input id="2" type="file" name="upload_import" accept=".csv" style="display: none;">
+                </div>
+                <div class="col-xs-6">
                   <button name="btn_add" class="btn btn-xs btn-primary btn-flat pull-right"><i class="fa fa-plus"></i> Tambah Data</button>
                 </div>
               </div>

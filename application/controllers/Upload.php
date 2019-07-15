@@ -40,4 +40,20 @@ class Upload extends CI_Controller {
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}
 
+	public function import_bagian()
+	{
+		$response 	= array(
+			'result'	=> false,
+			'msg'		=> ''
+		);
+
+		$param = array(
+			'userData' => $this->userData,
+			'postData' => $this->security->xss_clean($_POST)
+		);
+		$response = $this->model->import_bagian($param);
+
+		echo json_encode($response, JSON_PRETTY_PRINT);
+	}
+
 }

@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admina | Session Log</title>
+  <title>Sistem Penomoran Surat | Session Log</title>
   <?php $this->load->view('script-head'); ?>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

@@ -5,13 +5,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admina | Log in</title>
+  <title>Sistem Penomoran Surat | Log in</title>
   <?php $this->load->view('script-head'); ?>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href=""><b>Admina</b></a>
+    <a href=""><b>Sistem <br>Penomoran Surat</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
