@@ -212,31 +212,60 @@ class Nomor_sp_model extends CI_Model {
             
             if ($id == 0) {
                 $id = $this->db->insert_id();
-            } else{
-                $q = "DELETE FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $this->db->escape_str($id) ."';";
-                $this->db->simple_query($q);
+            }
+
+            $this->load->model('setting_model', 'setting');
+            $q = "SELECT * FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."';";
+            $r = $this->db->query($q, false)->result_array();
+            for ($i=0; $i < count($r); $i++) { 
+                $hapus = true;
+                foreach ($f['id_petugas'] as $key => $value) {
+                    if ($value == $r[$i]['id_petugas']) {
+                        $hapus = false;
+                        break;
+                    }
+                }
+
+                if ($hapus) {
+                    $q = "DELETE FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."' AND `id_petugas` = '". $this->db->escape_str($r[$i]['id_petugas']) ."';";
+                    $this->db->simple_query($q);
+                }
             }
 
             foreach ($f['id_petugas'] as $key => $value) {
-                $q =    "INSERT INTO 
-                            `surat_perintah_detail` 
-                            (
-                                `id_nomor_surat`,
-                                `tempat`,
-                                `tanggal_sppd`,
-                                `nomor_sppd`,
-                                `id_petugas`
-                            )
-                        VALUES
-                            (
-                                '". $id ."',
-                                '". $this->db->escape_str($f['tempat']) ."',
-                                '". $this->db->escape_str($f['tanggal_sppd']) ."',
-                                '". $this->db->escape_str($f['nomor_sppd']) ."',
-                                '". $this->db->escape_str($value) ."'
-                            )
-                        ;";
-                $this->db->simple_query($q); 
+                $q = "SELECT * FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."' AND `id_petugas` = '". $this->db->escape_str($value) ."';";
+                $r = $this->db->query($q, false)->result_array();
+                if (count($r) > 0) {
+                    $q =    "UPDATE 
+                                `surat_perintah_detail` 
+                            SET 
+                                `tempat` = '". $f['tempat'] ."',
+                                `tanggal_sppd` = '". $f['tanggal_sppd'] ."' 
+                            WHERE 
+                                `id` = '". $r[0]['id'] ."'
+                            ;";
+                    $this->db->simple_query($q);
+                } else{
+                    $q =    "INSERT INTO 
+                                `surat_perintah_detail` 
+                                (
+                                    `id_nomor_surat`,
+                                    `tempat`,
+                                    `tanggal_sppd`,
+                                    `nomor_sppd`,
+                                    `id_petugas`
+                                )
+                            VALUES
+                                (
+                                    '". $id ."',
+                                    '". $this->db->escape_str($f['tempat']) ."',
+                                    '". $this->db->escape_str($f['tanggal_sppd']) ."',
+                                    '". $this->setting->setting_nomor_sppd() ."',
+                                    '". $this->db->escape_str($value) ."'
+                                )
+                            ;";
+                    $this->db->simple_query($q); 
+                }
             }
 		} else{
 			$result['msg'] = 'Terjadi kesalahan saat menyimpan data.';
@@ -361,10 +390,11 @@ class Nomor_sp_model extends CI_Model {
         $d = $data['postData'];
         $id_bagian_surat = $d['id_bagian_surat'];
         $id_ujung_surat = $d['id_ujung_surat'];
-        $tanggal = substr($d['tanggal'], 0, 7);
+        $bulan = substr($d['tanggal'], 0, 7);
+        $tanggal = substr($d['tanggal'], 8, 2);
         $button_id = $d['button_id'];
 
-        $q = "SELECT * FROM `nomor_surat` WHERE `id_jenis_surat` = 2 AND `tanggal` LIKE '". $tanggal ."%';";
+        $q = "SELECT * FROM `nomor_surat` WHERE `id_jenis_surat` = 2 AND `tanggal` LIKE '". $bulan ."%';";
         $r = $this->db->query($q, false)->result_array();
         $n = count($r);
         $nomor = '';

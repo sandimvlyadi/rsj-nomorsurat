@@ -152,7 +152,8 @@ $(document).ready(function(){
 
     $('input[name="tanggal"], input[name="tanggal_sppd"]').datepicker({
       autoclose: true,
-      format: 'yyyy-mm-dd'
+      format: 'yyyy-mm-dd',
+      endDate: new Date()
     });
 
     $('input[name="filter_dari"], input[name="filter_sampai"]').datepicker({

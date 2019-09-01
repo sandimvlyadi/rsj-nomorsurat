@@ -130,10 +130,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <label>Tanggal SPPD</label>
                   <input type="text" name="tanggal_sppd" class="form-control" placeholder="Tanggal SPPD" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;"></input>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label>Nomor SPPD</label>
                   <input type="text" name="nomor_sppd" class="form-control" placeholder="Nomor SPPD" required></input>
-                </div>
+                </div> -->
                 <div class="form-group">
                   <label>Petugas</label>
                   <select class="form-control" name="id_petugas[]" multiple="multiple" style="width:100%">
