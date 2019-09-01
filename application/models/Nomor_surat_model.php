@@ -182,6 +182,7 @@ class Nomor_surat_model extends CI_Model {
                             `tujuan`,
                             `perihal`,
                             `tanggal`,
+                            `keterangan`,
                             `id_pengguna`
                         )
                     VALUES
@@ -194,6 +195,7 @@ class Nomor_surat_model extends CI_Model {
                             '". $this->db->escape_str($f['tujuan']) ."',
                             '". $this->db->escape_str($f['perihal']) ."',
                             '". $this->db->escape_str($f['tanggal']) ."',
+                            '". $this->db->escape_str($f['keterangan']) ."',
                             '". $this->db->escape_str($f['id_pengguna']) ."'
                         )
                     ;";

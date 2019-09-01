@@ -1,7 +1,9 @@
 var table = '';
 var selectBagianSurat = '';
 var selectUjungSurat = '';
+var selectPetugas = '';
 var varIdBagianSurat = 0;
+var userSession = [];
 
 $('.li-nomor-surat').addClass('menu-open');
 $('.li-nomor-surat .treeview-menu').css('display', 'block');
@@ -31,6 +33,7 @@ function userdata()
         success: function(response){
             if(response.result){
                 var session = response.userdata.session;
+                userSession = session;
                 $('input[name="display_name"]').val(session.displayName);
                 $('input[name="id_pengguna"]').val(session.id);
             }
@@ -39,6 +42,7 @@ function userdata()
 }
 
 $(document).ready(function(){
+    userdata();
 	csrf();
 	table = $('#dataTable').DataTable({
 		'processing'	: true,
@@ -56,7 +60,10 @@ $(document).ready(function(){
             	var row = new Array();
             	if (response.result) {
             		for(var x in response.data){
-                        var button = '<button id="'+ response.data[x].id +'" name="btn_edit" class="btn btn-info btn-xs btn-flat" title="Edit Data"><i class="fa fa-edit"></i></button> <button id="'+ response.data[x].id +'" name="btn_delete" class="btn btn-danger btn-xs btn-flat" title="Hapus Data"><i class="fa fa-trash"></i></button>';
+                        var button = '';
+                        if (userSession.id == response.data[x].id_pengguna) {
+                            button = '<button id="'+ response.data[x].id +'" name="btn_edit" class="btn btn-info btn-xs btn-flat" title="Edit Data"><i class="fa fa-edit"></i></button> <button id="'+ response.data[x].id +'" name="btn_delete" class="btn btn-danger btn-xs btn-flat" title="Hapus Data"><i class="fa fa-trash"></i></button>';
+                        }
                         var file = '';
                         if (response.data[x].file_upload == '' || response.data[x].file_upload == null) {
                             file = '<button id="'+ response.data[x].id +'" name="btn_upload" class="btn btn-primary btn-xs btn-flat" title="Upload File">Upload <i class="fa fa-cloud-upload"></i></button>';
@@ -69,7 +76,7 @@ $(document).ready(function(){
                             'tanggal'           : response.data[x].tanggal,
                             'nomor'             : response.data[x].nomor,
                             'tujuan'            : response.data[x].tujuan,
-                            'perihal'           : response.data[x].perihal,
+                            // 'perihal'           : response.data[x].perihal,
                             'nama_bagian_surat' : response.data[x].nama_bagian_surat,
                             'display_name'      : response.data[x].display_name,
                             'file_upload'       : file,
@@ -92,7 +99,7 @@ $(document).ready(function(){
             { 'data' : 'tanggal' },
             { 'data' : 'nomor' },
             { 'data' : 'tujuan' },
-            { 'data' : 'perihal' },
+            // { 'data' : 'perihal' },
             { 'data' : 'nama_bagian_surat' },
             { 'data' : 'display_name' },
             { 'data' : 'file_upload' },
@@ -104,7 +111,7 @@ $(document).ready(function(){
 		'columnDefs': [
     		{
     			'orderable'	: false,
-    			'targets'	: [ 0, 7, 8 ]
+    			'targets'	: [ 0, 6, 7 ]
     		}
   		]
 	});
@@ -143,7 +150,7 @@ $(document).ready(function(){
     });
     selectUjungSurat = $('select[name="id_ujung_surat"]').select2();
 
-    $('input[name="tanggal"]').datepicker({
+    $('input[name="tanggal"], input[name="tanggal_sppd"]').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd'
     });
@@ -151,21 +158,40 @@ $(document).ready(function(){
     $('input[name="filter_dari"], input[name="filter_sampai"]').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd'
-    })
+    });
 
-    userdata();
+    $.ajax({
+        type: 'GET',
+        url: baseurl + 'pengguna/select/',
+        dataType: 'json',
+        success: function(response){
+            if(response.result){
+                for(var x in response.data){
+                    $('select[name="id_petugas[]"]').append('<option value="'+ response.data[x].id +'">'+ response.data[x].display_name +'</option>');
+                }
+            }
+        }
+    });
+    selectPetugas = $('select[name="id_petugas[]"]').select2({
+        placeholder: "- Pilih Petugas -"
+    });
 });
 
 $('button[name="btn_add"]').click(function(){
     varIdBagianSurat = 0;
 	csrf();
 	$('button[name="btn_save"]').attr('id', '0');
-    $('input[name="nomor"]').val('');
+    $('input[name="nomor"]').val('-');
     $('input[name="tujuan"]').val('');
     $('input[name="perihal"]').val('');
+    $('input[name="tempat"]').val('');
+    $('input[name="tanggal_sppd"]').val('');
+    $('input[name="nomor_sppd"]').val('');
     $('input[name="tanggal"]').val('');
+    $('textarea[name="keterangan"]').val('');
     $(selectBagianSurat).val('0').trigger('change');
     $(selectUjungSurat).val('0').trigger('change');
+    $(selectPetugas).val('').trigger('change');
     userdata();
 
     $('#formTitle').text('Tambah Data');
@@ -186,12 +212,23 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
         dataType: 'json',
         success: function(response){
             if(response.result){
-                var d = response.data;
+                var d = response.data[0];
+                var petugas = [];
+                for (let i = 0; i < response.data.length; i++) {
+                    petugas.push(response.data[i].id_petugas);
+                }
+
+                $('button[name="btn_save"]').attr('id', id);
+                $('#formTitle').text('Edit Data');
 
                 $('input[name="nomor"]').val(d.nomor);
                 $('input[name="tujuan"]').val(d.tujuan);
                 $('input[name="perihal"]').val(d.perihal);
                 $('input[name="tanggal"]').val(d.tanggal);
+                $('input[name="tempat"]').val(d.tempat);
+                $('input[name="tanggal_sppd"]').val(d.tanggal_sppd);
+                $('input[name="nomor_sppd"]').val(d.nomor_sppd);
+                $('textarea[name="keterangan"]').val(d.keterangan);
                 userdata();
 
                 $(selectUjungSurat).find('option').each(function(){
@@ -206,8 +243,7 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
                     }
                 });
 
-                $('button[name="btn_save"]').attr('id', id);
-                $('#formTitle').text('Edit Data');
+                selectPetugas.val(petugas).trigger('change');
 
                 csrf();
                 $('#table').hide();
@@ -354,6 +390,24 @@ $('button[name="btn_save"]').click(function(){
         return;
     }
 
+    var petugas = $($('select[name="id_petugas[]"]')).find('option:selected').length;
+    if (petugas == 0) {
+        $.notify({
+            icon: 'glyphicon glyphicon-info-sign',
+            message: 'Silakan pilih minimal 1 petugas.'
+        }, {
+            type: 'warning',
+            delay: 1000,
+            timer: 500,
+            placement: {
+              from: 'top',
+              align: 'center'
+            }
+        });
+        $(this).focus();
+        return;
+    }
+
     $.ajax({
         type: 'POST',
         url: baseurl + 'nomor-sp/save/',
@@ -466,4 +520,32 @@ $('input[name="filter_dari"], input[name="filter_sampai"]').on('change', functio
 $('button[name="btn_reset"]').on('click', function(){
     $('input[name="filter_dari"], input[name="filter_sampai"]').val('');
     table.ajax.reload(null, false);
+});
+
+$('select[name="id_bagian_surat"], select[name="id_ujung_surat"], input[name="tanggal"]').on('change', function(){
+    var id_bagian_surat = $('select[name="id_bagian_surat"]').val();
+    var id_ujung_surat = $('select[name="id_ujung_surat"]').val();
+    var tanggal = $('input[name="tanggal"]').val();
+    var button_id = $('button[name="btn_save"]').attr('id');
+    if (id_bagian_surat != 0 && id_ujung_surat != 0 && tanggal != '') {
+        $.ajax({
+            type: 'POST',
+            url: baseurl + 'nomor-sp/get-nomor/',
+            data: {
+                'id_bagian_surat': id_bagian_surat,
+                'id_ujung_surat': id_ujung_surat,
+                'tanggal': tanggal,
+                'button_id': button_id,
+                'csrf_token': $('input[id="csrf"]').val()
+            },
+            dataType: 'json',
+            success: function(response){
+                if(response.result){
+                    $('input[name="nomor"]').val(response.nomor);
+                }
+
+                csrf();
+            }
+        });
+    }
 });

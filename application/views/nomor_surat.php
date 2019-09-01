@@ -124,6 +124,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <input type="text" name="perihal" class="form-control" placeholder="Perihal Surat"></input>
                 </div>
                 <div class="form-group">
+                  <label>Keterangan</label>
+                  <textarea name="keterangan" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
                   <label>Dibuat Oleh</label>
                   <input type="text" name="display_name" class="form-control" placeholder="Dibuat Oleh" readonly required></input>
                   <input type="hidden" name="id_pengguna" class="form-control" placeholder="Dibuat Oleh" required></input>

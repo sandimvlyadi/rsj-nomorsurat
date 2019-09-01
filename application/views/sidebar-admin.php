@@ -20,20 +20,7 @@
           <li class="li-nomor-barjas"><a href="<?php echo base_url('nomor-barjas/'); ?>"><i class="fa fa-circle-o"></i> Pengadaan Barang & Jasa</a></li>
         </ul>
       </li>
-      <li class="treeview li-bagian-surat">
-        <a href="#">
-          <i class="fa fa-bookmark-o"></i> <span>Bagian Surat</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li class="li-bagian-sp"><a href="<?php echo base_url('bagian-sp/'); ?>"><i class="fa fa-circle-o"></i> Surat Perintah</a></li>
-          <li class="li-bagian-sk"><a href="<?php echo base_url('bagian-sk/'); ?>"><i class="fa fa-circle-o"></i> Surat Keputusan</a></li>
-          <li class="li-bagian-nota"><a href="<?php echo base_url('bagian-nota/'); ?>"><i class="fa fa-circle-o"></i> Nota Dinas</a></li>
-          <li class="li-bagian-barjas"><a href="<?php echo base_url('bagian-barjas/'); ?>"><i class="fa fa-circle-o"></i> Pengadaan Barang & Jasa</a></li>
-        </ul>
-      </li>
+      <li class="li-bagian-surat"><a href="<?php echo base_url('bagian-surat/'); ?>"><i class="fa  fa-bookmark"></i> <span>Bagian Surat</span></a></li>
       <li class="li-ujung-surat"><a href="<?php echo base_url('ujung-surat/'); ?>"><i class="fa  fa-angle-double-right"></i> <span>Ujung Surat</span></a></li>
       <li class="li-pengguna"><a href="<?php echo base_url('pengguna/'); ?>"><i class="fa fa-users"></i> <span>Pengguna</span></a></li>
       <li class="treeview li-master">

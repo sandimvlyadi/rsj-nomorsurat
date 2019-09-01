@@ -9,9 +9,9 @@ class Bagian_surat_model extends CI_Model {
 
         if ($data['search']['value'] && !isset($data['all'])) {
         	$s = $this->db->escape_str($data['search']['value']);
-            $q .= "WHERE (b.`nama` LIKE '%". $s ."%' OR a.`kode` LIKE '%". $s ."%' OR a.`nama` LIKE '%". $s ."%' OR a.`keterangan` LIKE '%". $s ."%') AND a.`deleted_at` IS NULL ";
+            $q .= "WHERE (b.`nama` LIKE '%". $s ."%' OR a.`kode` LIKE '%". $s ."%' OR a.`nama` LIKE '%". $s ."%' OR a.`keterangan` LIKE '%". $s ."%') AND a.`deleted_at` IS NULL AND a.`id_jenis_surat` = 0 ";
         } else{
-        	$q .= "WHERE a.`deleted_at` IS NULL ";
+        	$q .= "WHERE a.`deleted_at` IS NULL AND a.`id_jenis_surat` = 0 ";
         }
 
         if (isset($data['order'])) {
@@ -96,14 +96,9 @@ class Bagian_surat_model extends CI_Model {
         );
 
         $q =    "SELECT
-                    a.*,
-                    b.`nama` AS `nama_jenis_surat`
+                    a.*
                 FROM
                     `bagian_surat` a
-                LEFT JOIN
-                    `jenis_surat` b
-                        ON
-                    a.`id_jenis_surat` = b.`id`
                 WHERE
                     a.`id` = '". $this->db->escape_str($id) ."'
                 ;";
@@ -145,7 +140,7 @@ class Bagian_surat_model extends CI_Model {
                             '". $this->db->escape_str($f['kode']) ."',
                             '". $this->db->escape_str($f['nama']) ."',
                             '". $this->db->escape_str($f['keterangan']) ."',
-                            '". $this->db->escape_str($f['id_jenis_surat']) ."'
+                            0
                         )
                     ;";
 		} else{
@@ -156,7 +151,7 @@ class Bagian_surat_model extends CI_Model {
                         `kode` = '". $this->db->escape_str($f['kode']) ."',
                         `nama` = '". $this->db->escape_str($f['nama']) ."',
                         `keterangan` = '". $this->db->escape_str($f['keterangan']) ."',
-                        `id_jenis_surat` = '". $this->db->escape_str($f['id_jenis_surat']) ."'
+                        `id_jenis_surat` = 0
                     WHERE
                         `id` = '". $this->db->escape_str($id) ."'
                     ;";
@@ -202,9 +197,9 @@ class Bagian_surat_model extends CI_Model {
 
         $q = "";
         if ($id == 0) {
-            $q = "SELECT * FROM `bagian_surat` WHERE `deleted_at` IS NULL;";
+            $q = "SELECT * FROM `bagian_surat` WHERE `id_jenis_surat` = 0 AND `deleted_at` IS NULL;";
         } else{
-            $q = "SELECT * FROM `bagian_surat` WHERE `id` = '". $this->db->escape_str($id) ."' AND `deleted_at` IS NULL;";
+            $q = "SELECT * FROM `bagian_surat` WHERE `id_jenis_surat` = 0 AND `id` = '". $this->db->escape_str($id) ."' AND `deleted_at` IS NULL;";
         }
         $r = $this->db->query($q)->result_array();
         if (count($r) > 0) {

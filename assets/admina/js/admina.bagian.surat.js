@@ -36,7 +36,6 @@ $(document).ready(function(){
 
 	            		row.push({
 	            			'no'                : i,
-                            'nama_jenis_surat'  : response.data[x].nama_jenis_surat,
                             'kode'              : response.data[x].kode,
                             'nama'              : response.data[x].nama,
                             'keterangan'        : response.data[x].keterangan,
@@ -56,7 +55,6 @@ $(document).ready(function(){
 
         'columns' : [
         	{ 'data' : 'no' },
-            { 'data' : 'nama_jenis_surat' },
             { 'data' : 'kode' },
             { 'data' : 'nama' },
             { 'data' : 'keterangan' },
@@ -68,27 +66,10 @@ $(document).ready(function(){
 		'columnDefs': [
     		{
     			'orderable'	: false,
-    			'targets'	: [ 0, 5 ]
+    			'targets'	: [ 0, 4 ]
     		}
   		]
 	});
-
-    $.ajax({
-        type: 'GET',
-        url: baseurl + 'jenis-surat/select/',
-        dataType: 'json',
-        success: function(response){
-            if(response.result){
-                $('select[name="id_jenis_surat"]').append('<option value="0">- Pilih Jenis Surat -</option>');
-                for(var x in response.data){
-                    $('select[name="id_jenis_surat"]').append('<option value="'+ response.data[x].id +'">'+response.data[x].nama+'</option>');
-                }
-            } else{
-                $('select[name="id_jenis_surat"]').append('<option value="0">- Pilih Jenis Surat -</option>');
-            }
-        }
-    });
-    selectJenisSurat = $('select[name="id_jenis_surat"]').select2();
 });
 
 $('button[name="btn_add"]').click(function(){
@@ -97,7 +78,6 @@ $('button[name="btn_add"]').click(function(){
     $('input[name="kode"]').val('');
     $('input[name="nama"]').val('');
     $('textarea[name="keterangan"]').val('');
-    $(selectJenisSurat).val('0').trigger('change');
 
     $('#formTitle').text('Tambah Data');
 
@@ -118,12 +98,6 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
         success: function(response){
             if(response.result){
                 var d = response.data;
-
-                $(selectJenisSurat).find('option').each(function(){
-                    if ($(this).val() == d.id_jenis_surat) {
-                        $(selectJenisSurat).val($(this).val()).trigger('change');
-                    }
-                });
 
                 $('input[name="kode"]').val(d.kode);
                 $('input[name="nama"]').val(d.nama);
@@ -243,23 +217,6 @@ $('button[name="btn_save"]').click(function(){
         return;
     }
 
-    if ($('select[name="id_jenis_surat"]').val() == 0) {
-        $.notify({
-            icon: 'glyphicon glyphicon-info-sign',
-            message: 'Silakan pilih jenis surat terlebih dahulu.'
-        }, {
-            type: 'warning',
-            delay: 1000,
-            timer: 500,
-            placement: {
-              from: 'top',
-              align: 'center'
-            }
-        });
-        $(this).focus();
-        return;
-    }
-
     $.ajax({
         type: 'POST',
         url: baseurl + 'bagian-surat/save/',
@@ -305,4 +262,60 @@ $('button[name="btn_save"]').click(function(){
             }
         }
     });
+});
+
+$('button[name="btn_import"]').on('click', function(){
+    $('input[name="upload_import"]').trigger('click');
+});
+
+$('input[name="upload_import"]').on('change', function(){
+    if ($(this).val() != '') {
+        var fd = $(this).prop('files')[0];
+        var fu = new FormData();
+        fu.append('file', fd);
+        fu.append('csrf_token', $('input[id="csrf"]').val());
+        fu.append('id', $(this).attr('id'));
+
+        $.ajax({
+            type: 'POST',
+            url: baseurl + 'upload/import-bagian/',
+            data: fu,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function(response){
+                if(response.result){
+                    $.notify({
+                        icon: "glyphicon glyphicon-ok",
+                        message: response.msg
+                    }, {
+                        type: 'success',
+                        delay: 3000,
+                        timer: 1000,
+                        placement: {
+                            from: 'top',
+                            align: 'center'
+                        }
+                    });
+                    
+                    table.ajax.reload(null, false);
+                } else{
+                    $.notify({
+                        icon: "glyphicon glyphicon-info-sign",
+                        message: response.msg
+                    }, {
+                        type: 'danger',
+                        delay: 3000,
+                        timer: 1000,
+                        placement: {
+                            from: 'top',
+                            align: 'center'
+                        }
+                    });
+                }
+
+                csrf();
+            }
+        });
+    }
 });

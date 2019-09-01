@@ -110,7 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <label>Ujung Surat</label>
                   <select name="id_ujung_surat" class="form-control" style="width: 100%;"></select>
                 </div>
-                <div class="form-group" style="display: none;">
+                <div class="form-group">
                   <label>Nomor Surat</label>
                   <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly></input>
                 </div>
@@ -121,6 +121,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="form-group">
                   <label>Perihal</label>
                   <input type="text" name="perihal" class="form-control" placeholder="Perihal Surat"></input>
+                </div>
+                <div class="form-group">
+                  <label>Keterangan</label>
+                  <textarea name="keterangan" class="form-control" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                   <label>Dibuat Oleh</label>

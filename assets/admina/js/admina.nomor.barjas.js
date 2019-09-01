@@ -160,10 +160,11 @@ $('button[name="btn_add"]').click(function(){
     varIdBagianSurat = 0;
 	csrf();
 	$('button[name="btn_save"]').attr('id', '0');
-    $('input[name="nomor"]').val('');
+    $('input[name="nomor"]').val('-');
     $('input[name="tujuan"]').val('');
     $('input[name="perihal"]').val('');
     $('input[name="tanggal"]').val('');
+    $('textarea[name="keterangan"]').val('');
     $(selectBagianSurat).val('0').trigger('change');
     $(selectUjungSurat).val('0').trigger('change');
     userdata();
@@ -188,10 +189,14 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
             if(response.result){
                 var d = response.data;
 
+                $('button[name="btn_save"]').attr('id', id);
+                $('#formTitle').text('Edit Data');
+
                 $('input[name="nomor"]').val(d.nomor);
                 $('input[name="tujuan"]').val(d.tujuan);
                 $('input[name="perihal"]').val(d.perihal);
                 $('input[name="tanggal"]').val(d.tanggal);
+                $('textarea[name="keterangan"]').val(d.keterangan);
                 userdata();
 
                 $(selectUjungSurat).find('option').each(function(){
@@ -205,9 +210,6 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
                         $(selectBagianSurat).val($(this).val()).trigger('change');
                     }
                 });
-
-                $('button[name="btn_save"]').attr('id', id);
-                $('#formTitle').text('Edit Data');
 
                 csrf();
                 $('#table').hide();
@@ -466,4 +468,32 @@ $('input[name="filter_dari"], input[name="filter_sampai"]').on('change', functio
 $('button[name="btn_reset"]').on('click', function(){
     $('input[name="filter_dari"], input[name="filter_sampai"]').val('');
     table.ajax.reload(null, false);
+});
+
+$('select[name="id_bagian_surat"], select[name="id_ujung_surat"], input[name="tanggal"]').on('change', function(){
+    var id_bagian_surat = $('select[name="id_bagian_surat"]').val();
+    var id_ujung_surat = $('select[name="id_ujung_surat"]').val();
+    var tanggal = $('input[name="tanggal"]').val();
+    var button_id = $('button[name="btn_save"]').attr('id');
+    if (id_bagian_surat != 0 && id_ujung_surat != 0 && tanggal != '') {
+        $.ajax({
+            type: 'POST',
+            url: baseurl + 'nomor-barjas/get-nomor/',
+            data: {
+                'id_bagian_surat': id_bagian_surat,
+                'id_ujung_surat': id_ujung_surat,
+                'tanggal': tanggal,
+                'button_id': button_id,
+                'csrf_token': $('input[id="csrf"]').val()
+            },
+            dataType: 'json',
+            success: function(response){
+                if(response.result){
+                    $('input[name="nomor"]').val(response.nomor);
+                }
+
+                csrf();
+            }
+        });
+    }
 });

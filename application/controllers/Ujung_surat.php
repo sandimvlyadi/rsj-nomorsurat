@@ -23,7 +23,10 @@ class Ujung_surat extends CI_Controller {
 		if(!$auth['result']){
 			redirect('login/');
 		}
+	}
 
+	private function role()
+	{
 		$role = $this->login->role($this->userData, 'ujung_surat');
 		if(!$role['result']){
 			redirect('dashboard/');
@@ -32,17 +35,20 @@ class Ujung_surat extends CI_Controller {
 
 	public function index()
 	{
+		$this->role();
 		$this->load->view('ujung_surat');
 	}
 
 	public function edit($id = 0)
 	{
+		$this->role();
 		$response = $this->model->edit($id);
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}
 
 	public function datatable()
 	{
+		$this->role();
 		$response 	= array(
 			'result'	=> false,
 			'msg'		=> ''
@@ -55,6 +61,7 @@ class Ujung_surat extends CI_Controller {
 
 	public function save()
 	{
+		$this->role();
 		$response 	= array(
 			'result'	=> false,
 			'msg'		=> ''
@@ -71,6 +78,7 @@ class Ujung_surat extends CI_Controller {
 
 	public function delete()
 	{
+		$this->role();
 		$response 	= array(
 			'result'	=> false,
 			'msg'		=> ''

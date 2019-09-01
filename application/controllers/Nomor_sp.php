@@ -97,22 +97,6 @@ class Nomor_sp extends CI_Controller {
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}
 
-	public function generate()
-	{
-		$response 	= array(
-			'result'	=> false,
-			'msg'		=> ''
-		);
-
-		$param = array(
-			'userData' => $this->userData,
-			'postData' => $this->security->xss_clean($_POST)
-		);
-		$response = $this->model->generate($param);
-
-		echo json_encode($response, JSON_PRETTY_PRINT);
-	}
-
 	public function upload()
 	{
 		$response 	= array(
@@ -138,6 +122,22 @@ class Nomor_sp extends CI_Controller {
 		);
 
 		$response = $this->model->select_bagian();
+
+		echo json_encode($response, JSON_PRETTY_PRINT);
+	}
+
+	public function get_nomor()
+	{
+		$response 	= array(
+			'result'	=> false,
+			'msg'		=> ''
+		);
+
+		$param = array(
+			'userData' => $this->userData,
+			'postData' => $this->security->xss_clean($_POST)
+		);
+		$response = $this->model->get_nomor($param);
 
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}

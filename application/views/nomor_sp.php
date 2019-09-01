@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       <th>Tanggal</th>
                       <th>Nomor Surat</th>
                       <th>Tujuan</th>
-                      <th>Perihal</th>
+                      <!-- <th>Perihal</th> -->
                       <th>Bagian</th>
                       <th>Pengguna</th>
                       <th>File</th>
@@ -110,7 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <label>Ujung Surat</label>
                   <select name="id_ujung_surat" class="form-control" style="width: 100%;"></select>
                 </div>
-                <div class="form-group" style="display: none;">
+                <div class="form-group">
                   <label>Nomor Surat</label>
                   <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly></input>
                 </div>
@@ -118,9 +118,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <label>Tujuan</label>
                   <input type="text" name="tujuan" class="form-control" placeholder="Tujuan Surat" required></input>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display:none;">
                   <label>Perihal</label>
                   <input type="text" name="perihal" class="form-control" placeholder="Perihal Surat"></input>
+                </div>
+                <div class="form-group">
+                  <label>Tempat</label>
+                  <input type="text" name="tempat" class="form-control" placeholder="Tempat"></input>
+                </div>
+                <div class="form-group">
+                  <label>Tanggal SPPD</label>
+                  <input type="text" name="tanggal_sppd" class="form-control" placeholder="Tanggal SPPD" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;"></input>
+                </div>
+                <div class="form-group">
+                  <label>Nomor SPPD</label>
+                  <input type="text" name="nomor_sppd" class="form-control" placeholder="Nomor SPPD" required></input>
+                </div>
+                <div class="form-group">
+                  <label>Petugas</label>
+                  <select class="form-control" name="id_petugas[]" multiple="multiple" style="width:100%">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Keterangan</label>
+                  <textarea name="keterangan" class="form-control" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                   <label>Dibuat Oleh</label>

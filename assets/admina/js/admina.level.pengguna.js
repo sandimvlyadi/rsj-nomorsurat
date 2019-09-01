@@ -35,6 +35,10 @@ $(document).ready(function(){
             		for(var x in response.data){
                         var button = '<button id="'+ response.data[x].id +'" name="btn_edit" class="btn btn-info btn-xs btn-flat" title="Edit Data"><i class="fa fa-edit"></i></button> <button id="'+ response.data[x].id +'" name="btn_delete" class="btn btn-danger btn-xs btn-flat" title="Hapus Data"><i class="fa fa-trash"></i></button>';
 
+                        if (response.data[x].id == 1 || response.data[x].id == 2) {
+                            button = '';
+                        }
+
 	            		row.push({
 	            			'no'            : i,
                             'nama'          : response.data[x].nama,

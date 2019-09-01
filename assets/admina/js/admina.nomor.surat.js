@@ -180,6 +180,7 @@ $('button[name="btn_add"]').click(function(){
     $('input[name="tujuan"]').val('');
     $('input[name="perihal"]').val('');
     $('input[name="tanggal"]').val('');
+    $('textarea[name="keterangan"]').val('');
     $(selectJenisSurat).val('0').trigger('change');
     $(selectBagianSurat).val('0').trigger('change');
     $(selectUjungSurat).val('0').trigger('change');
@@ -210,6 +211,7 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
                 $('input[name="tujuan"]').val(d.tujuan);
                 $('input[name="perihal"]').val(d.perihal);
                 $('input[name="tanggal"]').val(d.tanggal);
+                $('textarea[name="keterangan"]').val(d.keterangan);
                 userdata();
 
                 $(selectUjungSurat).find('option').each(function(){

@@ -35,7 +35,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <div class="box box-primary">
             <div class="box-body">
               <div class="row" style="padding-bottom: 10px;">
-                <div class="col-xs-12">
+                <div class="col-xs-6">
+                  <button name="btn_import" class="btn btn-xs btn-success btn-flat"><i class="fa fa-cloud-upload"></i> Import</button>
+                  <input id="0" type="file" name="upload_import" accept=".csv" style="display: none;">
+                </div>
+                <div class="col-xs-6">
                   <button name="btn_add" class="btn btn-xs btn-primary btn-flat pull-right"><i class="fa fa-plus"></i> Tambah Data</button>
                 </div>
               </div>
@@ -45,7 +49,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <thead>
                     <tr>
                       <th>No.</th>
-                      <th>Jenis Surat</th>
                       <th>Kode</th>
                       <th>Nama</th>
                       <th>Keterangan</th>
@@ -71,10 +74,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="box-body">
               <form id="formData">
                 <input id="csrf" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="" />
-                <div class="form-group">
-                  <label>Jenis Surat</label>
-                  <select name="id_jenis_surat" class="form-control" style="width: 100%;"></select>
-                </div>
                 <div class="form-group">
                   <label>Kode</label>
                   <input type="text" name="kode" class="form-control" placeholder="Kode" required></input>

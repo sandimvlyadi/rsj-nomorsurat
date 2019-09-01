@@ -150,25 +150,6 @@ class Nomor_sk_model extends CI_Model {
 		$id = $d['id'];
 		parse_str($d['form'], $f);
 
-        $param = array(
-            'userData'  => $data['userData'],
-            'postData'  => $f
-        );
-        $dataNomor = $this->generate($param);
-        $f['nomor'] = $dataNomor['nomor'];
-
-        $q =    "SELECT 
-                    * 
-                FROM 
-                    `ujung_surat` 
-                WHERE 
-                    `id` = '". $this->db->escape_str($f['id_ujung_surat']) ."'
-                ;";
-        $r = $this->db->query($q, false)->result_array();
-        if (count($r) > 0) {
-            $f['nomor'] .= $r[0]['nama'];
-        }
-
 		$q = '';
 		if ($id == 0) {
 			$q =    "INSERT INTO
@@ -182,6 +163,7 @@ class Nomor_sk_model extends CI_Model {
                             `tujuan`,
                             `perihal`,
                             `tanggal`,
+                            `keterangan`,
                             `id_pengguna`
                         )
                     VALUES
@@ -194,6 +176,7 @@ class Nomor_sk_model extends CI_Model {
                             '". $this->db->escape_str($f['tujuan']) ."',
                             '". $this->db->escape_str($f['perihal']) ."',
                             '". $this->db->escape_str($f['tanggal']) ."',
+                            '". $this->db->escape_str($f['keterangan']) ."',
                             '". $this->db->escape_str($f['id_pengguna']) ."'
                         )
                     ;";
@@ -208,6 +191,7 @@ class Nomor_sk_model extends CI_Model {
                         `tujuan` = '". $this->db->escape_str($f['tujuan']) ."',
                         `perihal` = '". $this->db->escape_str($f['perihal']) ."',
                         `tanggal` = '". $this->db->escape_str($f['tanggal']) ."',
+                        `keterangan` = '". $this->db->escape_str($f['keterangan']) ."',
                         `id_pengguna` = '". $this->db->escape_str($f['id_pengguna']) ."'
                     WHERE
                         `id` = '". $this->db->escape_str($id) ."'
@@ -271,55 +255,6 @@ class Nomor_sk_model extends CI_Model {
         return $result;
     }
 
-    function generate($data = array())
-    {
-        $result = array(
-            'result'    => true,
-            'msg'       => ''
-        );
-
-        $u = $data['userData'];
-        $d = $data['postData'];
-        
-        $q =    "SELECT 
-                    * 
-                FROM 
-                    `nomor_surat` 
-                WHERE 
-                    `id_jenis_surat` = '1' 
-                        AND 
-                    `id_bagian_surat` = '". $this->db->escape_str($d['id_bagian_surat']) ."' 
-                        AND 
-                    `tanggal` = '". $this->db->escape_str($d['tanggal']) ."'
-                ;";
-        $r = $this->db->query($q, false)->result_array();
-        $n = count($r);
-        $no = '';
-        if ($n > 0) {
-            $no = str_pad($n+1, 3, '0', STR_PAD_LEFT);
-        } else{
-            $no = '001';
-        }
-
-        $tanggal = date('Y-m-d');
-        $tgl = substr($d['tanggal'], 8, 2);
-        if ($d['tanggal'] < $tanggal) {
-            $no .= '.' . intval($tgl);
-        }
-
-        $no .= '/';
-
-        $q = "SELECT * FROM `bagian_surat` WHERE `id` = '". $this->db->escape_str($d['id_bagian_surat']) ."' AND `deleted_at` IS NULL;";
-        $r = $this->db->query($q, false)->result_array();
-        if (count($r) > 0) {
-            $no = $r[0]['kode'] . '/' . $no;
-        }
-
-        $result['nomor'] = $no;
-
-        return $result;
-    }
-
     function upload($data = array())
     {
         $result = array(
@@ -367,15 +302,59 @@ class Nomor_sk_model extends CI_Model {
             'msg'       => ''
         );
 
-        $q = "SELECT * FROM `bagian_surat` WHERE `id_jenis_surat` = '1' AND `deleted_at` IS NULL;";
+        $q = "SELECT * FROM `bagian_surat` WHERE `id_jenis_surat` = 0 AND `deleted_at` IS NULL;";
         $r = $this->db->query($q)->result_array();
         if (count($r) > 0) {
             $result['result'] = true;
             $result['data'] = $r;
+        }
 
-            if (count($r) == 1 && $id != 0) {
-                $result['data'] = $r[0];
+        return $result;
+    }
+
+    function get_nomor($data = array())
+    {
+        $result = array(
+            'result'    => true,
+            'msg'       => '',
+            'nomor'     => ''
+        );
+
+        $u = $data['userData'];
+        $d = $data['postData'];
+        $id_bagian_surat = $d['id_bagian_surat'];
+        $id_ujung_surat = $d['id_ujung_surat'];
+        $tanggal = substr($d['tanggal'], 0, 7);
+        $button_id = $d['button_id'];
+
+        $q = "SELECT * FROM `nomor_surat` WHERE `id_jenis_surat` = 1 AND `tanggal` LIKE '". $tanggal ."%';";
+        $r = $this->db->query($q, false)->result_array();
+        $n = count($r);
+        $nomor = '';
+        if ($n > 0) {
+            $nomor = str_pad($n+1, 3, '0', STR_PAD_LEFT);
+
+            if ($button_id != 0) {
+                $q = "SELECT * FROM `nomor_surat` WHERE `id` = '". $button_id ."' AND `deleted_at` IS NULL;";
+                $r = $this->db->query($q, false)->result_array();
+                if (count($r) > 0) {
+                    $nomor = substr($r[0]['nomor'], 4, 3);
+                }
             }
+        } else{
+            $nomor = '001';
+        }
+
+        $q = "SELECT * FROM `bagian_surat` WHERE `id` = '". $id_bagian_surat ."' AND `deleted_at` IS NULL;";
+        $bagian = $this->db->query($q, false)->result_array();
+        if(count($bagian) > 0){
+            $result['nomor'] = $bagian[0]['kode'] . '/' . $nomor . '/';
+        }
+        
+        $q = "SELECT * FROM `ujung_surat` WHERE `id` = '". $id_ujung_surat ."' AND `deleted_at` IS NULL;";
+        $ujung = $this->db->query($q, false)->result_array();
+        if(count($ujung) > 0){
+            $result['nomor'] .= $ujung[0]['nama'];
         }
 
         return $result;
