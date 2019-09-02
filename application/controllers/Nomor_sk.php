@@ -10,6 +10,7 @@ class Nomor_sk extends CI_Controller {
 		parent::__construct();
 		$this->load->model('login_model', 'login');
 		$this->load->model('nomor_sk_model', 'model');
+		$this->load->model('setting_model', 'setting');
 
 		$this->userData = array(
 			'session'	=> $this->session->userdata('userSession'),
@@ -134,10 +135,11 @@ class Nomor_sk extends CI_Controller {
 		);
 
 		$param = array(
-			'userData' => $this->userData,
-			'postData' => $this->security->xss_clean($_POST)
+			'userData' 			=> $this->userData,
+			'postData' 			=> $this->security->xss_clean($_POST),
+			'id_jenis_surat' 	=> 1
 		);
-		$response = $this->model->get_nomor($param);
+		$response = $this->setting->get_nomor($param);
 
 		echo json_encode($response, JSON_PRETTY_PRINT);
 	}
