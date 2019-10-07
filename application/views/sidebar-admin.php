@@ -20,6 +20,7 @@
           <li class="li-nomor-barjas"><a href="<?php echo base_url('nomor-barjas/'); ?>"><i class="fa fa-circle-o"></i> Pengadaan Barang & Jasa</a></li>
         </ul>
       </li>
+      <li class="li-cetak-laporan"><a href="<?php echo base_url('cetak-laporan/'); ?>"><i class="fa  fa-print"></i> <span>Cetak Laporan</span></a></li>
       <li class="li-bagian-surat"><a href="<?php echo base_url('bagian-surat/'); ?>"><i class="fa  fa-bookmark"></i> <span>Bagian Surat</span></a></li>
       <li class="li-ujung-surat"><a href="<?php echo base_url('ujung-surat/'); ?>"><i class="fa  fa-angle-double-right"></i> <span>Ujung Surat</span></a></li>
       <li class="li-pengguna"><a href="<?php echo base_url('pengguna/'); ?>"><i class="fa fa-users"></i> <span>Pengguna</span></a></li>
