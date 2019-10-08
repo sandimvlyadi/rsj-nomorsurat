@@ -114,8 +114,7 @@ class Nomor_sp_model extends CI_Model {
                     d.`display_name`,
                     e.`tempat`,
                     e.`tanggal_sppd`,
-                    e.`nomor_sppd`,
-                    e.`id_petugas`
+                    e.`nama_petugas`
                 FROM
                     `nomor_surat` a
                 LEFT JOIN
@@ -169,7 +168,6 @@ class Nomor_sp_model extends CI_Model {
                             `id_ujung_surat`,
                             `nomor`,
                             `tujuan`,
-                            `perihal`,
                             `tanggal`,
                             `keterangan`,
                             `id_pengguna`
@@ -182,7 +180,6 @@ class Nomor_sp_model extends CI_Model {
                             '". $this->db->escape_str($f['id_ujung_surat']) ."',
                             '". $this->db->escape_str($f['nomor']) ."',
                             '". $this->db->escape_str($f['tujuan']) ."',
-                            '". $this->db->escape_str($f['perihal']) ."',
                             '". $this->db->escape_str($f['tanggal']) ."',
                             '". $this->db->escape_str($f['keterangan']) ."',
                             '". $this->db->escape_str($f['id_pengguna']) ."'
@@ -197,7 +194,6 @@ class Nomor_sp_model extends CI_Model {
                         `id_ujung_surat` = '". $this->db->escape_str($f['id_ujung_surat']) ."',
                         `nomor` = '". $this->db->escape_str($f['nomor']) ."',
                         `tujuan` = '". $this->db->escape_str($f['tujuan']) ."',
-                        `perihal` = '". $this->db->escape_str($f['perihal']) ."',
                         `tanggal` = '". $this->db->escape_str($f['tanggal']) ."',
                         `keterangan` = '". $this->db->escape_str($f['keterangan']) ."',
                         `id_pengguna` = '". $this->db->escape_str($f['id_pengguna']) ."'
@@ -214,26 +210,25 @@ class Nomor_sp_model extends CI_Model {
                 $id = $this->db->insert_id();
             }
 
-            $this->load->model('setting_model', 'setting');
             $q = "SELECT * FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."';";
             $r = $this->db->query($q, false)->result_array();
             for ($i=0; $i < count($r); $i++) { 
                 $hapus = true;
-                foreach ($f['id_petugas'] as $key => $value) {
-                    if ($value == $r[$i]['id_petugas']) {
+                foreach ($f['nama_petugas'] as $key => $value) {
+                    if ($value == $r[$i]['nama_petugas']) {
                         $hapus = false;
                         break;
                     }
                 }
 
                 if ($hapus) {
-                    $q = "DELETE FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."' AND `id_petugas` = '". $this->db->escape_str($r[$i]['id_petugas']) ."';";
+                    $q = "DELETE FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."' AND `nama_petugas` = '". $this->db->escape_str($r[$i]['nama_petugas']) ."';";
                     $this->db->simple_query($q);
                 }
             }
 
-            foreach ($f['id_petugas'] as $key => $value) {
-                $q = "SELECT * FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."' AND `id_petugas` = '". $this->db->escape_str($value) ."';";
+            foreach ($f['nama_petugas'] as $key => $value) {
+                $q = "SELECT * FROM `surat_perintah_detail` WHERE `id_nomor_surat` = '". $id ."' AND `nama_petugas` = '". $this->db->escape_str($value) ."';";
                 $r = $this->db->query($q, false)->result_array();
                 if (count($r) > 0) {
                     $q =    "UPDATE 
@@ -252,15 +247,13 @@ class Nomor_sp_model extends CI_Model {
                                     `id_nomor_surat`,
                                     `tempat`,
                                     `tanggal_sppd`,
-                                    `nomor_sppd`,
-                                    `id_petugas`
+                                    `nama_petugas`
                                 )
                             VALUES
                                 (
                                     '". $id ."',
                                     '". $this->db->escape_str($f['tempat']) ."',
                                     '". $this->db->escape_str($f['tanggal_sppd']) ."',
-                                    '". $this->setting->setting_nomor_sppd() ."',
                                     '". $this->db->escape_str($value) ."'
                                 )
                             ;";

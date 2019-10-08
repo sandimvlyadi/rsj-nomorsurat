@@ -59,13 +59,13 @@ class Cetak_laporan extends CI_Controller {
 
         $param = array(
 			'userData' => $this->userData,
-			'postData' => $this->security->xss_clean($_POST)
+			'postData' => $this->security->xss_clean($_GET)
 		);
         $response = $this->model->print($param);
         
         if (!$response['result']) {
             redirect('cetak-laporan/');
-        }
+		}
 
         $this->load->view('print_laporan', $response);
     }

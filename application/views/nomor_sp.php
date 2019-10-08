@@ -98,55 +98,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <form id="formData">
                 <input id="csrf" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="" />
                 <input id="0" type="file" name="upload_file" style="display: none;">
-                <div class="form-group">
+                <div class="form-group col-md-3">
+                  <label>Tanggal Surat</label>
+                  <input type="text" name="tanggal" class="form-control" placeholder="Tanggal Surat" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;">
+                </div>
+                <div class="form-group col-md-3">
                   <label>Bagian Surat</label>
                   <select name="id_bagian_surat" class="form-control" style="width: 100%;"></select>
                 </div>
-                <div class="form-group">
-                  <label>Tanggal Surat</label>
-                  <input type="text" name="tanggal" class="form-control" placeholder="Tanggal Surat" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;"></input>
-                </div>
-                <div class="form-group">
+                <div class="form-group col-md-3">
                   <label>Ujung Surat</label>
                   <select name="id_ujung_surat" class="form-control" style="width: 100%;"></select>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-3">
                   <label>Nomor Surat</label>
-                  <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly></input>
+                  <input type="text" name="nomor" class="form-control" placeholder="Nomor Surat" readonly>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                   <label>Tujuan</label>
-                  <input type="text" name="tujuan" class="form-control" placeholder="Tujuan Surat" required></input>
+                  <input type="text" name="tujuan" class="form-control" placeholder="Tujuan Surat" required>
                 </div>
-                <div class="form-group" style="display:none;">
-                  <label>Perihal</label>
-                  <input type="text" name="perihal" class="form-control" placeholder="Perihal Surat"></input>
-                </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                   <label>Tempat</label>
-                  <input type="text" name="tempat" class="form-control" placeholder="Tempat"></input>
+                  <input type="text" name="tempat" class="form-control" placeholder="Tempat">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-4">
                   <label>Tanggal SPPD</label>
-                  <input type="text" name="tanggal_sppd" class="form-control" placeholder="Tanggal SPPD" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;"></input>
+                  <input type="text" name="tanggal_sppd" class="form-control" placeholder="Tanggal SPPD" value="<?php echo date('Y-m-d'); ?>" required readonly style="background-color: #fff;">
                 </div>
-                <!-- <div class="form-group">
-                  <label>Nomor SPPD</label>
-                  <input type="text" name="nomor_sppd" class="form-control" placeholder="Nomor SPPD" required></input>
-                </div> -->
-                <div class="form-group">
-                  <label>Petugas</label>
-                  <select class="form-control" name="id_petugas[]" multiple="multiple" style="width:100%">
-                  </select>
+                <div class="col-md-12 list-petugas">
+                  <div class="row">
+                    <div class="form-group col-md-1">
+                      <label>Tambah</label>
+                      <button name="btn_add_petugas" type="button" class="btn btn-success btn-flat"><i class="fa fa-plus"></i> Tambah</button>
+                    </div>
+                    <div class="form-group col-md-11">
+                      <label>Petugas</label>
+                      <input type="text" name="nama_petugas[]" class="form-control" placeholder="Petugas">
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-12">
                   <label>Keterangan</label>
                   <textarea name="keterangan" class="form-control" rows="3"></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-12">
                   <label>Dibuat Oleh</label>
-                  <input type="text" name="display_name" class="form-control" placeholder="Dibuat Oleh" readonly required></input>
-                  <input type="hidden" name="id_pengguna" class="form-control" placeholder="Dibuat Oleh" required></input>
+                  <input type="text" name="display_name" class="form-control" placeholder="Dibuat Oleh" readonly required>
+                  <input type="hidden" name="id_pengguna" class="form-control" placeholder="Dibuat Oleh" required>
                 </div>
               </form>
             </div>
@@ -166,6 +166,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <template name="petugas">
+    <div class="row">
+      <div class="form-group col-md-1">
+        <label>Hapus</label>
+        <button name="btn_delete_petugas" type="button" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Hapus</button>
+      </div>
+      <div class="form-group col-md-11">
+        <label>Petugas</label>
+        <input type="text" name="nama_petugas[]" class="form-control" placeholder="Petugas">
+        </select>
+      </div>
+    </div>
+  </template>
 
   <?php $this->load->view('footer'); ?>
 

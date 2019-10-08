@@ -1,7 +1,6 @@
 var table = '';
 var selectBagianSurat = '';
 var selectUjungSurat = '';
-var selectPetugas = '';
 var varIdBagianSurat = 0;
 var userSession = [];
 
@@ -41,6 +40,23 @@ function userdata()
     });
 }
 
+function initComponent()
+{
+    $('button[name="btn_save"]').attr('id', '0');
+    $('input[name="nomor"]').val('-');
+    $('input[name="tujuan"]').val('');
+    $('input[name="tempat"]').val('');
+    $('input[name="tanggal_sppd"]').val('');
+    $('input[name="nomor_sppd"]').val('');
+    $('input[name="tanggal"]').val('');
+    $('textarea[name="keterangan"]').val('');
+    $(selectBagianSurat).val('0').trigger('change');
+    $(selectUjungSurat).val('0').trigger('change');
+    $('button[name="btn_delete_petugas"]').trigger('click');
+    $('input[name="nama_petugas[]"]').val('');
+    userdata();
+}
+
 $(document).ready(function(){
     userdata();
 	csrf();
@@ -76,7 +92,6 @@ $(document).ready(function(){
                             'tanggal'           : response.data[x].tanggal,
                             'nomor'             : response.data[x].nomor,
                             'tujuan'            : response.data[x].tujuan,
-                            // 'perihal'           : response.data[x].perihal,
                             'nama_bagian_surat' : response.data[x].nama_bagian_surat,
                             'display_name'      : response.data[x].display_name,
                             'file_upload'       : file,
@@ -99,7 +114,6 @@ $(document).ready(function(){
             { 'data' : 'tanggal' },
             { 'data' : 'nomor' },
             { 'data' : 'tujuan' },
-            // { 'data' : 'perihal' },
             { 'data' : 'nama_bagian_surat' },
             { 'data' : 'display_name' },
             { 'data' : 'file_upload' },
@@ -160,40 +174,12 @@ $(document).ready(function(){
       autoclose: true,
       format: 'yyyy-mm-dd'
     });
-
-    $.ajax({
-        type: 'GET',
-        url: baseurl + 'pengguna/select/',
-        dataType: 'json',
-        success: function(response){
-            if(response.result){
-                for(var x in response.data){
-                    $('select[name="id_petugas[]"]').append('<option value="'+ response.data[x].id +'">'+ response.data[x].display_name +'</option>');
-                }
-            }
-        }
-    });
-    selectPetugas = $('select[name="id_petugas[]"]').select2({
-        placeholder: "- Pilih Petugas -"
-    });
 });
 
 $('button[name="btn_add"]').click(function(){
     varIdBagianSurat = 0;
 	csrf();
-	$('button[name="btn_save"]').attr('id', '0');
-    $('input[name="nomor"]').val('-');
-    $('input[name="tujuan"]').val('');
-    $('input[name="perihal"]').val('');
-    $('input[name="tempat"]').val('');
-    $('input[name="tanggal_sppd"]').val('');
-    $('input[name="nomor_sppd"]').val('');
-    $('input[name="tanggal"]').val('');
-    $('textarea[name="keterangan"]').val('');
-    $(selectBagianSurat).val('0').trigger('change');
-    $(selectUjungSurat).val('0').trigger('change');
-    $(selectPetugas).val('').trigger('change');
-    userdata();
+	initComponent();
 
     $('#formTitle').text('Tambah Data');
 
@@ -204,7 +190,8 @@ $('button[name="btn_add"]').click(function(){
 });
 
 $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
-	csrf();
+    csrf();
+    initComponent();
 	var id = $(this).attr('id');
 
     $.ajax({
@@ -216,15 +203,15 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
                 var d = response.data[0];
                 var petugas = [];
                 for (let i = 0; i < response.data.length; i++) {
-                    petugas.push(response.data[i].id_petugas);
+                    petugas.push(response.data[i].nama_petugas);
                 }
+                console.log(petugas);
 
                 $('button[name="btn_save"]').attr('id', id);
                 $('#formTitle').text('Edit Data');
 
                 $('input[name="nomor"]').val(d.nomor);
                 $('input[name="tujuan"]').val(d.tujuan);
-                $('input[name="perihal"]').val(d.perihal);
                 $('input[name="tanggal"]').val(d.tanggal);
                 $('input[name="tempat"]').val(d.tempat);
                 $('input[name="tanggal_sppd"]').val(d.tanggal_sppd);
@@ -244,7 +231,15 @@ $('#dataTable').on('click', 'button[name="btn_edit"]', function(){
                     }
                 });
 
-                selectPetugas.val(petugas).trigger('change');
+                for (let index = 0; index < petugas.length; index++) {
+                    if (index == 0) {
+                        $('input[name="nama_petugas[]"]:eq(0)').val(petugas[index]);
+                    } else{
+                        $('button[name="btn_add_petugas"]').trigger('click');
+                        $('input[name="nama_petugas[]"]:eq('+index+')').val(petugas[index]);
+                    }
+                    
+                }
 
                 csrf();
                 $('#table').hide();
@@ -319,7 +314,8 @@ $('#dataTable').on('click', 'button[name="btn_delete"]', function(){
 });
 
 $('button[name="btn_cancel"]').click(function(){
-	$('#form').hide();
+    $('#form').hide();
+    initComponent();
 	setTimeout(function(){
 		$('#table').fadeIn();
 	}, 100);
@@ -378,24 +374,6 @@ $('button[name="btn_save"]').click(function(){
         $.notify({
             icon: 'glyphicon glyphicon-info-sign',
             message: 'Silakan pilih ujung surat terlebih dahulu.'
-        }, {
-            type: 'warning',
-            delay: 1000,
-            timer: 500,
-            placement: {
-              from: 'top',
-              align: 'center'
-            }
-        });
-        $(this).focus();
-        return;
-    }
-
-    var petugas = $($('select[name="id_petugas[]"]')).find('option:selected').length;
-    if (petugas == 0) {
-        $.notify({
-            icon: 'glyphicon glyphicon-info-sign',
-            message: 'Silakan pilih minimal 1 petugas.'
         }, {
             type: 'warning',
             delay: 1000,
@@ -549,4 +527,13 @@ $('select[name="id_bagian_surat"], select[name="id_ujung_surat"], input[name="ta
             }
         });
     }
+});
+
+$(document).on('click', 'button[name="btn_add_petugas"]', function(){
+    var template = $('template[name="petugas"]').html();
+    $('.list-petugas').append(template);
+});
+
+$(document).on('click', 'button[name="btn_delete_petugas"]',  function(){
+    $(this).closest('.row').remove();
 });
