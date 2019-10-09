@@ -50,7 +50,7 @@ class Setting_model extends CI_Model {
         $button_id = $d['button_id'];
         $nMundur = $this->setting_nomor_mundur();
 
-        $q = "SELECT * FROM `nomor_surat` WHERE `id_jenis_surat` = '". $id_jenis_surat ."' AND `tanggal` LIKE '". $bulan ."%';";
+        $q = "SELECT * FROM `nomor_surat` WHERE `id_jenis_surat` = '". $id_jenis_surat ."' AND `tanggal` LIKE '%". $bulan ."%';";
         $r = $this->db->query($q, false)->result_array();
         $n = count($r);
         $nomor = '';
