@@ -51,7 +51,7 @@ class Cetak_laporan extends CI_Controller {
 		echo json_encode($response, JSON_PRETTY_PRINT);
     }
 
-    public function print()
+    public function printt()
     {
         if (!isset($_GET['id_jenis_surat']) || !isset($_GET['tanggal_dari']) || !isset($_GET['tanggal_sampai'])) {
             redirect('cetak-laporan/');
@@ -61,7 +61,7 @@ class Cetak_laporan extends CI_Controller {
 			'userData' => $this->userData,
 			'postData' => $this->security->xss_clean($_GET)
 		);
-        $response = $this->model->print($param);
+        $response = $this->model->printt($param);
         
         if (!$response['result']) {
             redirect('cetak-laporan/');

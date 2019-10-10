@@ -20,7 +20,7 @@ class Cetak_laporan_model extends CI_Model {
         $r = $this->db->query($q, false)->result_array();
         if (count($r) > 0) {
             $result['result'] = true;
-            $result['target'] = base_url('cetak-laporan/print?id_jenis_surat='. $id_jenis_surat .'&tanggal_dari='. $tanggal_dari .'&tanggal_sampai='.$tanggal_sampai);
+            $result['target'] = base_url('cetak-laporan/printt?id_jenis_surat='. $id_jenis_surat .'&tanggal_dari='. $tanggal_dari .'&tanggal_sampai='.$tanggal_sampai);
         } else{
             $result['msg'] = 'Tidak ada laporan tersedia untuk dicetak.';
         }
@@ -28,7 +28,7 @@ class Cetak_laporan_model extends CI_Model {
         return $result;
     }
 
-    function print($data = array())
+    function printt($data = array())
     {
         $result = array(
 			'result'    => true,
